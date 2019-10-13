@@ -1,10 +1,11 @@
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <memory>
 #include <numeric>
 #include <string>
 #include <vector>
-
+#define STARTDIST 1000
 /**
  * @brief class representing single city on the map
  */
@@ -69,17 +70,44 @@ public:
    */
   std::vector<int> warehouses;
 
+  double bestScore = STARTDIST;
 
-  };
+  double score(){
+    double dist;
+    int n =0;
+    double tempDist;
+    for(auto city : problem->cities){
 
-  /**
+      for(int i = 1;i<warehouses.size();i++){
+        
+        if(i==1)
+          tempDist=std::min(city.distance(problem->cities.at(0)),city.distance(problem->cities.at(1)));
+        tempDist=std::min(tempDist,city.distance(problem->cities.at(i)));
+      }
+      if(n++)
+       dist=tempDist ;
+      dist=std::min(dist,tempDist);
+
+    }
+    return dist;
+  }
+ /**
    * @brief Construct a new solution t object
    * It takes shared pointer to the problem definition. This way we don't have
    * to copy the problem, only smartpointer to it.
    * @param problem_ the problem smartpointer
    */
   solution_t(std::shared_ptr<problem_t> problem_)
-      : problem(problem_), warehouses(problem_->numberOfWarhouse) {
-    for (int i = 0; i < warehouses.size(); i++)
-      warehouses[i] = i;
+        : problem(problem_), warehouses(problem_->numberOfWarhouse) {
+      for (int i = 0; i < warehouses.size(); i++)
+        warehouses[i] = i;
+    };
   };
+
+ 
+ solution_t brute_force_find_solution(solution_t problem) {
+  using namespace std;
+  solution_t best = problem;
+  
+  return best;
+}
