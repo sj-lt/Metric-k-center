@@ -40,12 +40,12 @@ public:
 /**
  * @brief the problem definition
  *
- * The cities we would like to see.
+ * The cities .
  */
 class problem_t {
 public:
   /**
-   * @brief list of the cities to visit.
+   * @brief list of the cities .
    *
    * This is the default order - [1,2,3, ...].
    */
@@ -66,12 +66,18 @@ public:
 
   /**
    * @brief cities indices.
-   * The order in wich we would like to see every city
+   * cities with warehouse 
    */
   std::vector<int> warehouses;
 
   double bestScore = STARTDIST;
-
+ /**
+   * @brief goal function value.
+   *
+   *    Calculate distance from city to warehouse.
+   *
+   * @return double lenght of the path.
+   */
   double score(){
     double dist;
     int n =0;
@@ -79,14 +85,19 @@ public:
     for(auto city : problem->cities){
 
       for(int i = 1;i<warehouses.size();i++){
-        
+        /**
+         * get the nearest warehouse
+         *  **/
         if(i==1)
           tempDist=std::min(city.distance(problem->cities.at(0)),city.distance(problem->cities.at(1)));
         tempDist=std::min(tempDist,city.distance(problem->cities.at(i)));
       }
+      /**
+         * get farthest city from the nearest warehouse
+         *  **/
       if(n++)
        dist=tempDist ;
-      dist=std::min(dist,tempDist);
+      dist=std::max(dist,tempDist);
 
     }
     return dist;
