@@ -1,11 +1,15 @@
 #pragma once
 #include <algorithm>
 #include <cmath>
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <numeric>
 #include <string>
 #include <vector>
+
+
+
 class city_t {
 public:
   std::string name;
@@ -27,9 +31,12 @@ public:
   std::shared_ptr<problem_t> problem;
   std::vector<int> warehouses;
   int numberOfWarehouses;
+
   double bestScore ;
 
   double score();
+
+  std::vector<city_t> getCitySolution();
 
   solution_t(std::shared_ptr<problem_t> problem_, int numberOfWarehouses_);
 

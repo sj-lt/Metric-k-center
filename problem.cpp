@@ -1,6 +1,8 @@
 
 #include "problem.hpp"
 #include "combinations.cpp"
+#include "json.hpp"
+#define WAREHOUSES 2
 
 
   double city_t::distance(city_t &c2) {
@@ -17,8 +19,6 @@
     auto d = R * c;
     return d;
   }
-
-
 
   double solution_t::score(){
 
@@ -71,6 +71,14 @@
     return dist;
   }
 
+  std::vector<city_t> solution_t::getCitySolution(){
+		std::vector<city_t> warehouseCities;
+		for (int i=0;i<warehouses.size();i++) {
+			warehouseCities.push_back(problem->cities.at(warehouses.at(i)));
+  		}
+	return warehouseCities;
+  }
+
   solution_t::solution_t(std::shared_ptr<problem_t> problem_, int numberOfWarehouses_)
     : problem(problem_),
     numberOfWarehouses(numberOfWarehouses_),bestScore(0),
@@ -78,8 +86,6 @@
     for (int i = 0; i < numberOfWarehouses_; i++)
       warehouses[i] = i;
   }
-    
-        
 
   solution_t::solution_t( std::vector<city_t> input_cities, int numberOfWarehouses_)
       : problem(std::make_shared<problem_t>(problem_t{input_cities})),
@@ -90,6 +96,33 @@
   }
   solution_t::solution_t(){};
 
+std::ostream &operator<<(std::ostream &s, solution_t &sol) {
+	using json = nlohmann::json;
+	json j ={};
+	auto cities = sol.getCitySolution();
+
+	for(auto city : cities) {
+    	j["/cities/-"_json_pointer]={city.name,city.longitude,city.latitude};
+
+	}
+	s<<j;
+	
+  return s;
+}
+
+std::istream &operator>>(std::istream &s, solution_t &sol) {
+  nlohmann::json sol_json;
+  sol_json = sol_json.parse(s);
+  std::vector<city_t> cities;
+  for (auto element : sol_json["cities"]) {
+    city_t c{element[0], element[1], element[2]};
+    cities.push_back(c);
+  }
+  solution_t solnew(cities,WAREHOUSES);
+  sol = solnew;
+  return s;
+}
+
 int main(int argc, char **argv) {
   using namespace std;
 
@@ -98,12 +131,18 @@ int main(int argc, char **argv) {
                          {"Bydgoszcz", 53.1169002, 17.9008963},
                          {"Poznan", 52.456009, 16.896973}},2);
 
+    ifstream is("miasta.json"); // open file
+    is >> experiment;
+
 
   chaseSequence combinations = chaseSequence(experiment.problem->cities.size(),2,experiment);
 
   combinations.init();
-
-
+  
+	cout<<"best"<<combinations.problem_.bestScore<<endl;
+	ofstream os("magazyny.json"); // open file
+    os << combinations.problem_;
+  
 
  
 };
