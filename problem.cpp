@@ -1,27 +1,9 @@
-#include <algorithm>
-#include <cmath>
-#include <iostream>
-#include <memory>
-#include <numeric>
-#include <string>
-#include <vector>
-#define STARTDIST 1000
-/**
- * @brief class representing single city on the map
- */
-class city_t {
-public:
-  std::string name;
-  double longitude;
-  double latitude;
 
-  /**
-   * @brief calculate distance between two cities
-   *
-   * @param c2 second city to calculate distance to
-   * @return double distance on the planet Earth
-   */
-  double distance(city_t &c2) {
+#include "problem.hpp"
+#include "combinations.cpp"
+
+
+  double city_t::distance(city_t &c2) {
     using namespace std;
     auto &[name2, lon2, lat2] = c2;
     auto R = 6371e3; // metres
@@ -35,50 +17,10 @@ public:
     auto d = R * c;
     return d;
   }
-};
 
-/**
- * @brief the problem definition
- *
- * The cities .
- */
-class problem_t {
-public:
-  /**
-   * @brief list of the cities .
-   *
-   * This is the default order - [1,2,3, ...].
-   */
-  std::vector<city_t> cities;
-  int numberOfWarhouse;
-};
 
-/**
- * @brief the solution type
- *
- */
-class solution_t {
-public:
-  /**
-   * @brief smart pointer that have reference to the problem
-   */
-  std::shared_ptr<problem_t> problem;
 
-  /**
-   * @brief cities indices.
-   * cities with warehouse 
-   */
-  std::vector<int> warehouses;
-
-  double bestScore = STARTDIST;
- /**
-   * @brief goal function value.
-   *
-   *    Calculate distance from city to warehouse.
-   *
-   * @return double lenght of the path.
-   */
-  double score(){
+  double solution_t::score(){
     double dist;
     int n =0;
     double tempDist;
@@ -102,23 +44,44 @@ public:
     }
     return dist;
   }
- /**
-   * @brief Construct a new solution t object
-   * It takes shared pointer to the problem definition. This way we don't have
-   * to copy the problem, only smartpointer to it.
-   * @param problem_ the problem smartpointer
-   */
-  solution_t(std::shared_ptr<problem_t> problem_)
-        : problem(problem_), warehouses(problem_->numberOfWarhouse) {
-      for (int i = 0; i < warehouses.size(); i++)
-        warehouses[i] = i;
-    };
-  };
+
+  solution_t::solution_t(std::shared_ptr<problem_t> problem_, int numberOfWarehouses_)
+    : problem(problem_),
+    numberOfWarehouses(numberOfWarehouses_),
+        warehouses(numberOfWarehouses) {
+    for (int i = 0; i < numberOfWarehouses_; i++)
+      warehouses[i] = i;
+  }
+    
+        
+
+  solution_t::solution_t( std::vector<city_t> input_cities, int numberOfWarehouses_)
+      : problem(std::make_shared<problem_t>(problem_t{input_cities})),
+      numberOfWarehouses(numberOfWarehouses_),
+        warehouses(numberOfWarehouses_) {
+    for (int i = 0; i < numberOfWarehouses_; i++)
+      warehouses[i] = i;
+  }
+  solution_t::solution_t(){};
+
+int main(int argc, char **argv) {
+  using namespace std;
+
+  solution_t experiment({{"Warszawa", 52.2330269, 20.7810081},
+                         {"Gdansk", 54.3612063, 18.5499431},
+                         {"Bydgoszcz", 53.1169002, 17.9008963},
+                         {"Poznan", 52.456009, 16.896973}},2);
 
  
- solution_t brute_force_find_solution(solution_t problem) {
-  using namespace std;
-  solution_t best = problem;
-  
-  return best;
-}
+
+  chaseSequence combinations = chaseSequence(experiment.problem->cities.size(),2,experiment);
+  //combinations.init();
+
+ cout << experiment.score() << endl;
+ cout << experiment.warehouses.at(0) << endl;
+ cout << experiment.warehouses.at(1) << endl;
+ cout << experiment.problem->cities.at(0).name << endl;
+ cout << experiment.problem->cities.at(1).name << endl;
+
+ 
+};
