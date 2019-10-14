@@ -27,14 +27,23 @@ void chaseSequence::init(){
     checkAnwsers();
 }
 void chaseSequence::checkAnwsers(){
+    //std::cout<<"STARTING checkAnwsers"<<std::endl;
     std::vector<int> tempSolution = problem_.warehouses;;
     double tempScore ;
+    int j=0;
     for(int i=0;i<anwsers_.size();i++){
-        if(anwsers_.at(i))
-            problem_.warehouses.at(i);
+        if(anwsers_.at(i)){
+            problem_.warehouses.at(j)=i;
+            j++;
+        }
     }
-    if(tempScore=problem_.score()>problem_.bestScore) //check if buggy
+
+    tempScore=problem_.score();
+    if(tempScore>problem_.bestScore) //check if buggy
+        {
+            
         problem_.warehouses=tempSolution;
+        }
     else
         problem_.bestScore=tempScore;
 
@@ -42,15 +51,16 @@ void chaseSequence::checkAnwsers(){
 }
 void chaseSequence::findAnwsers(){
     j_=r_;
-    while(work_.at(0)!=1){
+    while(work_.at(j_)!=1){
         work_.at(j_) = 1;
         j_++;
     }
     if(j_==n_){
         exit();
     }
+    else{
     work_.at(j_) = 0;
-    if(j_%2==0){
+     if(j_%2==0){
         if(anwsers_.at(j_)==0)
             moveLeftOne();
         else
@@ -61,13 +71,13 @@ void chaseSequence::findAnwsers(){
         moveLeftTwo();
     }
     else
-        moveRightOne();
-    
+        moveRightOne(); /**/
+    }
 }
 
 void chaseSequence::exit(){
     using namespace std;
-    cout<<problem_.bestScore<<endl;
+    //cout<<problem_.bestScore<<endl;
 }
 
 void chaseSequence::moveRightOne(){

@@ -21,33 +21,59 @@
 
 
   double solution_t::score(){
-    double dist;
-    int n =0;
+
+	//std::cout<<"start score--------:"<<std::endl;
+    double dist=0;
+    int n =0,n1=0;
     double tempDist;
     for(auto city : problem->cities){
+      bool ifWarehouse = false; 
+      for(int i =0;i<warehouses.size();i++){
 
-      for(int i = 1;i<warehouses.size();i++){
-        /**
-         * get the nearest warehouse
-         *  **/
-        if(i==1)
-          tempDist=std::min(city.distance(problem->cities.at(0)),city.distance(problem->cities.at(1)));
-        tempDist=std::min(tempDist,city.distance(problem->cities.at(i)));
+
+        if(n==warehouses.at(i))
+          ifWarehouse=true;
+		
       }
+      if(ifWarehouse){
+		  n++;
+        continue;
+		}
+      for(int i = 1;i<warehouses.size();i++){
+          
+                                                                     /**
+                                                                         * get the nearest warehouse
+                                                                         *  **/
+        if(i==1){
+			float a,b;
+
+          tempDist=std::min(city.distance(problem->cities.at(warehouses.at(0))),
+                                city.distance(problem->cities.at(warehouses.at(1))));
+		}
+        else{
+
+		
+          tempDist=std::min(tempDist,city.distance(problem->cities.at(i)));
+		}
+
+	  }
       /**
          * get farthest city from the nearest warehouse
          *  **/
-      if(n++)
+      if(n1==0){
        dist=tempDist ;
-      dist=std::max(dist,tempDist);
-
+	  n1++;
+	  }
+	dist=std::max(dist,tempDist);
+	n++;
     }
+	//std::cout<<dist<<std::endl;
     return dist;
   }
 
   solution_t::solution_t(std::shared_ptr<problem_t> problem_, int numberOfWarehouses_)
     : problem(problem_),
-    numberOfWarehouses(numberOfWarehouses_),
+    numberOfWarehouses(numberOfWarehouses_),bestScore(0),
         warehouses(numberOfWarehouses) {
     for (int i = 0; i < numberOfWarehouses_; i++)
       warehouses[i] = i;
@@ -57,7 +83,7 @@
 
   solution_t::solution_t( std::vector<city_t> input_cities, int numberOfWarehouses_)
       : problem(std::make_shared<problem_t>(problem_t{input_cities})),
-      numberOfWarehouses(numberOfWarehouses_),
+      numberOfWarehouses(numberOfWarehouses_),bestScore(0),
         warehouses(numberOfWarehouses_) {
     for (int i = 0; i < numberOfWarehouses_; i++)
       warehouses[i] = i;
@@ -72,16 +98,12 @@ int main(int argc, char **argv) {
                          {"Bydgoszcz", 53.1169002, 17.9008963},
                          {"Poznan", 52.456009, 16.896973}},2);
 
- 
 
   chaseSequence combinations = chaseSequence(experiment.problem->cities.size(),2,experiment);
-  //combinations.init();
 
- cout << experiment.score() << endl;
- cout << experiment.warehouses.at(0) << endl;
- cout << experiment.warehouses.at(1) << endl;
- cout << experiment.problem->cities.at(0).name << endl;
- cout << experiment.problem->cities.at(1).name << endl;
+  combinations.init();
+
+
 
  
 };
