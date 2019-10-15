@@ -33,7 +33,7 @@ public:
   int numberOfWarehouses;
 
   double bestScore ;
-
+  double getBestScoreKm();
   double score();
 
   std::vector<city_t> getCitySolution();

@@ -11,7 +11,7 @@ public:
 
     int j_,r_,n_,s_,t_;
 
-    chaseSequence(int n,int k,solution_t problem);
+    chaseSequence(solution_t problem);
     chaseSequence();
 
     void init();
