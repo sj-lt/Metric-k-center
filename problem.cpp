@@ -3,7 +3,7 @@
 #include "combinations.cpp"
 #include "json.hpp"
 #include "skel.cpp"
-#define WAREHOUSES 7
+#define WAREHOUSES 2
 
 double city_t::distance(city_t &c2)
 {

@@ -10,12 +10,13 @@ int main(int argc, char **argv) {
                          {"Kraków",50.0614300,19.9365800},
                          {"Lublin",51.2500000,22.5666700}},WAREHOUSES);
 
-    ifstream is("miasta.json"); // open file
+    ifstream is("citiesCsv.json"); // open file
     is >> experiment;
 
     experiment.numberOfWarehouses = WAREHOUSES;
     chaseSequence combinations = chaseSequence(experiment);
 
+    //std::cout<<combinations.t_<<std::endl;
     combinations.init();
   
 	cout<<"best score: "<<combinations.problem_.getBestScoreKm()<<endl;

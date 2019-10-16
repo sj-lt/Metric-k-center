@@ -51,13 +51,11 @@ void chaseSequence::checkAnwsers()
             j++;
         }
     }
-    for (auto w : problem_.warehouses){
-        std::cout<<w;
-    }
+   
     
     //check score for new warehouses
     newScore = problem_.score();
-    std::cout<<"  Score: " <<newScore<<std::endl;
+    //std::cout<<"  Score: " <<newScore<<std::endl;
     if (newScore > problem_.bestScore) 
     {
         problem_.warehouses = prevSolution;
