@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <chrono>
 #include "problem.hpp"
 
 
@@ -16,12 +15,11 @@ public:
     chaseSequence();
 
     void init();
-    void gimmeSolution();
-    auto mesureTime();
 private:
     void checkAnwsers();
-    int findAnwsers();
+    void findAnwsers();
 
+    void exit();
 
     void moveRightOne();
     void moveRightTwo();

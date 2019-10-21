@@ -21,7 +21,7 @@ const std::string html_header = R"(
 
 
 
-<div id="mapid" style="width: 600px; height: 500px;"></div>
+<div id="mapid" style="width: 1000x; height: 700px;"></div>
 <script>
 
 	var mymap = L.map('mapid').setView([51.969397, 19.555664], 6);

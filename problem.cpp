@@ -36,7 +36,8 @@ double solution_t::score()
 	double tempDist;
 
 	int n = 0, n1 = 0;
-	for (auto city : problem->cities)
+	//for (city_t city : problem->cities)
+	for(int h=0 ;h<problem->cities.size();h++)
 	{
 		bool ifWarehouse = false;
 		for (auto w : warehouses)
@@ -59,17 +60,18 @@ double solution_t::score()
                                                                          *  **/
 				if (i == 1)
 				{
-					float a, b;
-					a=city.distance(problem->cities.at(warehouses.at(0)));
-					b=city.distance(problem->cities.at(warehouses.at(1)));
+					//float a, b;
+					//a=city.distance(problem->cities.at(warehouses.at(0)));
+					//b=city.distance(problem->cities.at(warehouses.at(1)));
 					//std::cout<<"distance:"<<city.name<<problem->cities.at(warehouses.at(0)).name<<"  "<<a<<std::endl;
 					//std::cout<<"distance:"<<city.name<<problem->cities.at(warehouses.at(1)).name<<"  "<<b<<std::endl;
-					tempDist = std::min(a,b	);
+					//tempDist = std::min(a,b	);
+					tempDist = std::min(problem->cities.at(h).distance(problem->cities.at(warehouses.at(0))),problem->cities.at(h).distance(problem->cities.at(warehouses.at(1)))	);
 				}
 				else
 				{
 					//std::cout<<"distance:"<<city.name<<problem->cities.at(warehouses.at(0)).name<<"  "<<a<<std::endl;
-					tempDist = std::min(tempDist, city.distance(problem->cities.at(warehouses.at(i))));
+					tempDist = std::min(tempDist, problem->cities.at(h).distance(problem->cities.at(warehouses.at(i))));
 				}
 			}
 			/**
@@ -140,7 +142,7 @@ std::istream &operator>>(std::istream &s, solution_t &sol)
 	std::vector<city_t> cities;
 	for (auto element : sol_json["cities"])
 	{
-		city_t c{element[0], element[1], element[2]};
+		city_t c{element[0], element[2], element[1]};
 		cities.push_back(c);
 	}
 	solution_t solnew(cities, sol.numberOfWarehouses);

@@ -9,33 +9,6 @@ chaseSequence::chaseSequence(solution_t problem)
     s_ = n_ - t_;
     problem_ = problem;
 }
-auto chaseSequence::mesureTime(){
- 	auto t1 = std::chrono::high_resolution_clock::now();
-    gimmeSolution();
-    auto t2 = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
-
-    return duration;
-};
-
-void chaseSequence::gimmeSolution ()
-{
-    init();
-    bool exit = false;
-    while(!exit){
-        
-        
-        checkAnwsers();
-        switch(findAnwsers()){ 
-            case 1: moveLeftOne();break; 
-            case 2: moveRightTwo();break; 
-            case 3: moveLeftTwo();break; 
-            case 4: moveRightOne();break; 
-            case 112: exit = true;break; 
-        }
-    }
-    
-}
 
 void chaseSequence::init()
 {
@@ -58,20 +31,20 @@ void chaseSequence::init()
         r_ = s_;
     else
         r_ = t_;
+    checkAnwsers();
 }
-
-
-
 void chaseSequence::checkAnwsers()
 {
     //std::cout<<"STARTING checkAnwsers*-------------------------------"<<std::endl;
     std::vector<int> prevSolution = problem_.warehouses;
-
+    
     double newScore;
 
+    //std::cout<<std::endl<<"best score: "<<problem_.bestScore<<std::endl; 
     int j = 0;
     for (int i = 0; i < anwsers_.size(); i++)
     {
+        //std::cout<<anwsers_.at(i);
         if (anwsers_.at(i))
         {
             problem_.warehouses.at(j) = i;
@@ -90,11 +63,10 @@ void chaseSequence::checkAnwsers()
     else
         problem_.bestScore = newScore;
 
-
-
+    prevSolution.clear();
+    findAnwsers();
 }
-
-int chaseSequence::findAnwsers()
+void chaseSequence::findAnwsers()
 {
     j_ = r_;
     while (work_.at(j_) != 1)
@@ -104,7 +76,7 @@ int chaseSequence::findAnwsers()
     }
     if (j_ == n_)
     {
-        return 112;
+        exit();
     }
     else
     {
@@ -112,20 +84,24 @@ int chaseSequence::findAnwsers()
         if (j_ % 2 == 0)
         {
             if (anwsers_.at(j_) == 0)
-                return 1;//moveLeftOne();
+                moveLeftOne();
             else
-                return 2 ;//moveRightTwo();
+                moveRightTwo();
         }
         else if (anwsers_.at(j_) == 0)
         {
-            return 3 ;//moveLeftTwo();
+            moveLeftTwo();
         }
         else
-            return 4 ;//moveRightOne(); /**/
+            moveRightOne(); /**/
     }
 }
 
-
+void chaseSequence::exit()
+{
+    using namespace std;
+    //cout<<problem_.bestScore<<endl;
+}
 
 void chaseSequence::moveRightOne()
 {
@@ -138,7 +114,7 @@ void chaseSequence::moveRightOne()
     else if (r_ == (j_ - 1))
         r_ = j_;
 
-    
+    checkAnwsers();
 }
 void chaseSequence::moveRightTwo()
 {
@@ -156,7 +132,7 @@ void chaseSequence::moveRightTwo()
         else if (r_ == (j_ - 2))
             r_ = j_ - 1;
 
-       
+        checkAnwsers();
     }
 }
 
@@ -171,7 +147,7 @@ void chaseSequence::moveLeftOne()
     else if (r_ == (j_ - 1))
         r_ = j_;
 
-    
+    checkAnwsers();
 }
 void chaseSequence::moveLeftTwo()
 {
@@ -189,6 +165,6 @@ void chaseSequence::moveLeftTwo()
         else if (r_ == (j_ - 1))
             r_ = j_ - 2;
 
-        
+        checkAnwsers();
     }
 }
