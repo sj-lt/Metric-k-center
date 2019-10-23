@@ -1,6 +1,7 @@
 
 #include "problem.hpp"
 #include "combinations.cpp"
+#include "hillClimber.cpp"
 #include "json.hpp"
 #include "skel.cpp"
 #define WAREHOUSES 2

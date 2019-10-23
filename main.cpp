@@ -23,7 +23,8 @@ int main(int argc, char **argv)
 
 	
 	experiment.numberOfWarehouses = WAREHOUSES;
-	chaseSequence combinations = chaseSequence(experiment);
+	//chaseSequence combinations = chaseSequence(experiment);
+	hillClimber combinations = hillClimber(experiment);
 	auto duration = combinations.mesureTime();
 
 	cout << "duration: " << duration << endl;
