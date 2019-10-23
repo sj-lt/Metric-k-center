@@ -15,7 +15,8 @@ int main(int argc, char **argv)
 	}
 
 	//chaseSequence combinations = chaseSequence(experiment);
-	hillClimber combinations = hillClimber(experiment);
+	//hillClimber combinations = hillClimber(experiment);
+	tabuSearcher combinations = tabuSearcher(experiment);
 	auto duration = combinations.mesureTime();
 
 	cout << "duration: " << duration << endl;

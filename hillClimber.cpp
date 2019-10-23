@@ -72,7 +72,7 @@ for(auto neighbour : neighbours_){
         else
             problem_.bestScore = newScore;
 
-        }
+    }
 
 }
 

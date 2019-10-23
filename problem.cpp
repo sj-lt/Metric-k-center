@@ -2,6 +2,7 @@
 #include "problem.hpp"
 #include "combinations.cpp"
 #include "hillClimber.cpp"
+#include "tabuSearcher.cpp"
 #include "json.hpp"
 #include "skel.cpp"
 #define WAREHOUSES 2
