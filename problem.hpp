@@ -38,9 +38,10 @@ public:
 
   std::vector<city_t> getCitySolution();
 
-  solution_t(std::shared_ptr<problem_t> problem_, int numberOfWarehouses_);
+  solution_t(std::shared_ptr<problem_t> problem_, int numberOfWarehouses);
 
-  solution_t( std::vector<city_t> input_cities, int numberOfWarehouses);
+  solution_t(std::vector<city_t> input_cities, int numberOfWarehouses);
       
+  solution_t(int numberOfWarehouses);
   solution_t();
  };

@@ -101,23 +101,33 @@ std::vector<city_t> solution_t::getCitySolution()
 	return warehouseCities;
 }
 
-solution_t::solution_t(std::shared_ptr<problem_t> problem_, int numberOfWarehouses_)
+solution_t::solution_t(std::shared_ptr<problem_t> problem_, int numberOfWarehouses)
 	: problem(problem_),
-	  numberOfWarehouses(numberOfWarehouses_), bestScore(0),
+	  numberOfWarehouses(numberOfWarehouses), bestScore(0),
 	  warehouses(numberOfWarehouses)
 {
-	for (int i = 0; i < numberOfWarehouses_; i++)
+	for (int i = 0; i < numberOfWarehouses; i++)
 		warehouses[i] = i;
 }
 
-solution_t::solution_t(std::vector<city_t> input_cities, int numberOfWarehouses_)
+solution_t::solution_t(std::vector<city_t> input_cities, int numberOfWarehouses)
 	: problem(std::make_shared<problem_t>(problem_t{input_cities})),
-	  numberOfWarehouses(numberOfWarehouses_), bestScore(0),
-	  warehouses(numberOfWarehouses_)
+	  numberOfWarehouses(numberOfWarehouses), bestScore(0),
+	  warehouses(numberOfWarehouses)
 {
-	for (int i = 0; i < numberOfWarehouses_; i++)
+	for (int i = 0; i < numberOfWarehouses; i++)
 		warehouses[i] = i;
 }
+
+solution_t::solution_t(int numberOfWarehouses)
+	:numberOfWarehouses(numberOfWarehouses)
+	, bestScore(0)
+	, warehouses(numberOfWarehouses)
+{
+	for (int i = 0; i < numberOfWarehouses; i++)
+		warehouses[i] = i;
+}
+
 solution_t::solution_t(){};
 
 std::ostream &operator<<(std::ostream &s, solution_t &sol)
