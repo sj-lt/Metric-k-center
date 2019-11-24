@@ -1,0 +1,7 @@
+{
+    "numberOfWarehouses" : 10,
+    "method" : "hillClimb",
+    "tabuSize" : 200
+}
+
+

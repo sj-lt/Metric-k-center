@@ -1,3 +1,10 @@
+/old
+/build
+/csv
+/.idea
+/.vscode
+
+*.html
 # Prerequisites
 *.d
 

@@ -4,11 +4,10 @@
 #include "problem.hpp"
 
 
-class chaseSequence{
+class chaseSequence: public solver_t{
 public:
     std::vector<int> anwsers_;
     std::vector<int> work_;
-    solution_t problem_;
 
     int j_,r_,n_,s_,t_;
 
@@ -17,7 +16,6 @@ public:
 
     void init();
     void gimmeSolution();
-    auto mesureTime();
 private:
     void checkAnwsers();
     int findAnwsers();

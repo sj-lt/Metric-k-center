@@ -5,15 +5,6 @@ tabuSearcher::tabuSearcher(solution_t problem)
     problem_ = problem;
 }
 
-auto tabuSearcher::mesureTime()
-{
-    auto t1 = std::chrono::high_resolution_clock::now();
-    gimmeSolution(); //change function
-    auto t2 = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-
-    return duration;
-};
 
 void tabuSearcher::gimmeSolution()
 {
@@ -26,9 +17,35 @@ void tabuSearcher::gimmeSolution()
         checkTabu();
         checkNeighbours();
     }
+    std::cout<<max_tabu_size_<<std::endl;
     problem_.warehouses=bestWarehouses_;
     problem_.bestScore=bestGlobalScore_;
 }
+void tabuSearcher::init()
+{
+    std::cout << "start init" << std::endl;
+    std::random_device rd;                                                         // obtain a random number from hardware
+    std::mt19937 eng(rd());                                                        // seed the generator
+    std::uniform_int_distribution<> distr(0, problem_.problem->cities.size() - 1); // define the range
+
+    max_tabu_size_=problem_.config_json["tabuSize"];
+    problem_.warehouses.clear();
+    problem_.warehouses.push_back(distr(eng));
+
+    while (problem_.warehouses.size() != problem_.numberOfWarehouses)
+    {
+        int newRandom = distr(eng);
+        if (std::find(problem_.warehouses.begin(), problem_.warehouses.end(), newRandom) == problem_.warehouses.end())
+        {
+            problem_.warehouses.push_back(newRandom);
+        }
+    }
+    problem_.bestScore = problem_.score();
+    bestGlobalScore_ = problem_.score();
+    bestWarehouses_ = problem_.warehouses;
+    std::cout << "finish init" << std::endl;
+}
+
 bool operator==(const std::vector<int> &a,
                 const std::vector<int> &b)
 {
@@ -52,29 +69,7 @@ void tabuSearcher::checkTabu()
                       neighbours_.end());
 
 }
-void tabuSearcher::init()
-{
-    std::cout << "start init" << std::endl;
-    std::random_device rd;                                                         // obtain a random number from hardware
-    std::mt19937 eng(rd());                                                        // seed the generator
-    std::uniform_int_distribution<> distr(0, problem_.problem->cities.size() - 1); // define the range
 
-    problem_.warehouses.clear();
-    problem_.warehouses.push_back(distr(eng));
-
-    while (problem_.warehouses.size() != problem_.numberOfWarehouses)
-    {
-        int newRandom = distr(eng);
-        if (std::find(problem_.warehouses.begin(), problem_.warehouses.end(), newRandom) == problem_.warehouses.end())
-        {
-            problem_.warehouses.push_back(newRandom);
-        }
-    }
-    problem_.bestScore = problem_.score();
-    bestGlobalScore_ = problem_.score();
-    bestWarehouses_ = problem_.warehouses;
-    std::cout << "finish init" << std::endl;
-}
 void tabuSearcher::checkNeighbours()
 {
 
@@ -105,9 +100,6 @@ void tabuSearcher::checkNeighbours()
         }
 
         tabu_.push_back(newSolution);
-        /*for(auto t : tabu_){
-            std::cout<<t.at(0)<<" "<<t.at(1)<<std::endl;
-        }*/
         if (newScore < bestGlobalScore_)
         {
             bestGlobalScore_ = newScore;

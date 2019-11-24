@@ -3,7 +3,6 @@
 #include "combinations.cpp"
 #include "hillClimber.cpp"
 #include "tabuSearcher.cpp"
-#include "json.hpp"
 #include "skel.cpp"
 #define WAREHOUSES 2
 
@@ -102,30 +101,33 @@ std::vector<city_t> solution_t::getCitySolution()
 	return warehouseCities;
 }
 
-solution_t::solution_t(std::shared_ptr<problem_t> problem_, int numberOfWarehouses)
+solution_t::solution_t(std::shared_ptr<problem_t> problem_, nlohmann::json config_json)
 	: problem(problem_),
-	  numberOfWarehouses(numberOfWarehouses), bestScore(0),
-	  warehouses(numberOfWarehouses)
+	  config_json (config_json),
+	  numberOfWarehouses(config_json["numberOfWarehouses"]), bestScore(0),
+	  warehouses((int)config_json["numberOfWarehouses"])
 {
-	for (int i = 0; i < numberOfWarehouses; i++)
+	for (int i = 0; i < (int)config_json["numberOfWarehouses"]; i++)
 		warehouses[i] = i;
 }
 
-solution_t::solution_t(std::vector<city_t> input_cities, int numberOfWarehouses)
+solution_t::solution_t(std::vector<city_t> input_cities, nlohmann::json config_json)
 	: problem(std::make_shared<problem_t>(problem_t{input_cities})),
-	  numberOfWarehouses(numberOfWarehouses), bestScore(0),
-	  warehouses(numberOfWarehouses)
+	  config_json (config_json),
+	  numberOfWarehouses(config_json["numberOfWarehouses"]), bestScore(0),
+	  warehouses((int)config_json["numberOfWarehouses"])
 {
-	for (int i = 0; i < numberOfWarehouses; i++)
+	for (int i = 0; i < (int)config_json["numberOfWarehouses"]; i++)
 		warehouses[i] = i;
 }
 
-solution_t::solution_t(int numberOfWarehouses)
-	:numberOfWarehouses(numberOfWarehouses)
-	, bestScore(0)
-	, warehouses(numberOfWarehouses)
+solution_t::solution_t(nlohmann::json config_json)
+	:numberOfWarehouses((int)config_json["numberOfWarehouses"]),
+	config_json (config_json),
+	bestScore(0),
+	warehouses((int)config_json["numberOfWarehouses"])
 {
-	for (int i = 0; i < numberOfWarehouses; i++)
+	for (int i = 0; i < (int)config_json["numberOfWarehouses"]; i++)
 		warehouses[i] = i;
 }
 
@@ -149,15 +151,23 @@ std::ostream &operator<<(std::ostream &s, solution_t &sol)
 
 std::istream &operator>>(std::istream &s, solution_t &sol)
 {
+	std::cout<<sol.config_json["numberOfWarehouses"]<<std::endl;
 	nlohmann::json sol_json;
 	sol_json = sol_json.parse(s);
+	
 	std::vector<city_t> cities;
 	for (auto element : sol_json["cities"])
 	{
 		city_t c{element[0], element[2], element[1]};
 		cities.push_back(c);
 	}
-	solution_t solnew(cities, sol.numberOfWarehouses);
+	solution_t solnew(cities, sol.config_json);
 	sol = solnew;
 	return s;
 }
+/*std::istream &operator>>(std::istream &s, nlohmann::json &config_json)
+{
+	nlohmann::json config_json;
+	config_json = config_json.parse(s);
+	return s;
+}*/

@@ -9,22 +9,12 @@ chaseSequence::chaseSequence(solution_t problem)
     s_ = n_ - t_;
     problem_ = problem;
 }
-auto chaseSequence::mesureTime(){
- 	auto t1 = std::chrono::high_resolution_clock::now();
-    gimmeSolution();
-    auto t2 = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
-
-    return duration;
-};
 
 void chaseSequence::gimmeSolution ()
 {
     init();
     bool exit = false;
     while(!exit){
-        
-        
         checkAnwsers();
         switch(findAnwsers()){ 
             case 1: moveLeftOne();break; 
@@ -64,7 +54,6 @@ void chaseSequence::init()
 
 void chaseSequence::checkAnwsers()
 {
-    //std::cout<<"STARTING checkAnwsers*-------------------------------"<<std::endl;
     std::vector<int> prevSolution = problem_.warehouses;
 
     double newScore;
@@ -82,7 +71,6 @@ void chaseSequence::checkAnwsers()
     
     //check score for new warehouses
     newScore = problem_.score();
-    //std::cout<<"  Score: " <<newScore<<std::endl;
     if (newScore > problem_.bestScore) 
     {
         problem_.warehouses = prevSolution;
@@ -121,7 +109,7 @@ int chaseSequence::findAnwsers()
             return 3 ;//moveLeftTwo();
         }
         else
-            return 4 ;//moveRightOne(); /**/
+            return 4 ;//moveRightOne();
     }
 }
 

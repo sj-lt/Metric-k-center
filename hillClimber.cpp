@@ -6,14 +6,7 @@ hillClimber::hillClimber(solution_t problem)
     problem_ = problem;
 }
 
-auto hillClimber::mesureTime(){
- 	auto t1 = std::chrono::high_resolution_clock::now();
-    gimmeSolution();//change function
-    auto t2 = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
 
-    return duration;
-};
 
 void hillClimber::gimmeSolution ()
 {
@@ -23,8 +16,6 @@ void hillClimber::gimmeSolution ()
         getNeighbours();
         checkNeighbours();
     }
-    
-    
 }
 
 void hillClimber::init()
@@ -52,10 +43,7 @@ void hillClimber::checkNeighbours()
 {
     std::vector<int> prevSolution = problem_.warehouses;
     double newScore;
-for(auto neighbour : neighbours_){
-        
-    //std::cout<<"  neighbour: " <<neighbour.at(0)<<" "<<neighbour.at(1)<<std::endl;
-}
+
     for(auto neighbour : neighbours_){
         
         
@@ -64,7 +52,6 @@ for(auto neighbour : neighbours_){
         
         newScore = problem_.score();
 
-        //std::cout<<"  Score: " <<newScore<<std::endl;
         if (newScore > problem_.bestScore) 
         {
             problem_.warehouses = prevSolution;
@@ -80,8 +67,6 @@ for(auto neighbour : neighbours_){
 void hillClimber::getNeighbours()
 {
     std::vector<int> sol;
-    std::cout<<"  ------------------------------------------------------ " <<std::endl;
-    std::cout<<"  warehouse: " <<problem_.warehouses.at(0)<<" "<<problem_.warehouses.at(1)<<std::endl;
     neighbours_.clear();
     for(int i=0;i<problem_.numberOfWarehouses;i++){
         sol=problem_.warehouses;
@@ -91,11 +76,6 @@ void hillClimber::getNeighbours()
         neighbours_.push_back(sol);
        
     }
-
-    for(auto neighbour : neighbours_){
-        
-    std::cout<<"  neighbour: " <<neighbour.at(0)<<" "<<neighbour.at(1)<<std::endl;
-}
 }
 
 

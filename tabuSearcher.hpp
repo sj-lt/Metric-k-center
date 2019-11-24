@@ -8,11 +8,10 @@
 
 
 
-class tabuSearcher{
+class tabuSearcher: public solver_t{
 public:
     std::list<std::vector<int>> neighbours_;
     std::list<std::vector<int>> tabu_;
-    solution_t problem_;
     std::vector<int> bestWarehouses_;
     double bestGlobalScore_;
     int max_tabu_size_=10;
@@ -21,7 +20,7 @@ public:
 
     void init();
     void gimmeSolution();
-    auto mesureTime();
+
 private:
     void getNeighbours();
     void checkNeighbours();

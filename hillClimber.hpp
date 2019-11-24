@@ -8,17 +8,15 @@
 
 
 
-class hillClimber{
+class hillClimber : public solver_t{
 public:
     std::list<std::vector<int>> neighbours_;
-    solution_t problem_;
     
     hillClimber(solution_t problem);
     hillClimber();
 
     void init();
     void gimmeSolution();
-    auto mesureTime();
 private:
     void getNeighbours();
     void checkNeighbours();

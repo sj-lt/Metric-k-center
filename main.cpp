@@ -1,43 +1,90 @@
 #include "problem.cpp"
+
+/*
+	build --->  
+				g++ main.cpp -std=c++17 -o ./build/kCenterProblem	
+	run    ---> 
+				./build/solverTester ./config/config.json ./input/citiesTest6Csv.json ./output/solverTester
+	run tabu --> 
+				./build/kCenterProblem ./config/tabuConfig.json ./input/citiesTest6Csv.json ./output/tabuSolution.json
+*/
+std::map<std::string, std::function<solver_t*(solution_t)>> generate_methods_map() ;
 void visualize(solution_t *problem);
 int main(int argc, char **argv)
 {
 	using namespace std;
+	nlohmann::json config_json;
+
+  	map<string,function<solver_t*(solution_t)>> 
+		methodMap = generate_methods_map();
 
 
-	solution_t experiment(WAREHOUSES) ;
-
-	if (argc > 2) {
+//Read config
+	if (argc > 1) {
 		ifstream is(argv[1]); // open file
+		config_json = nlohmann::json::parse(is);
+	} else {
+		config_json = nlohmann::json::parse(cin);
+	}
+	solution_t experiment(config_json);
+
+//Read input data
+	if (argc > 2) {
+		ifstream is(argv[2]); // open file
 		is >> experiment;
 	} else {
 		cin >> experiment;
 	}
 
-	//chaseSequence combinations = chaseSequence(experiment);
-	//hillClimber combinations = hillClimber(experiment);
-	tabuSearcher combinations = tabuSearcher(experiment);
-	auto duration = combinations.mesureTime();
+//load solver from configs
+	solver_t *combinations;
+	try{
+		cout<<"Trying to start: "<<config_json["method"]<<endl;
+	combinations = methodMap[config_json["method"]](experiment);	//throwing an instance of 'std::bad_function_call' if wrong params
+	
+	}
+	catch(const bad_function_call& e){
+		cout<<e.what()<<endl;
+		cout<<"----------Probably wrong method argument specified----------"<<endl;
+		cout<<"-------------------check your config file-------------------"<<endl;
 
-	cout << "duration: " << duration << endl;
-	cout << "best score: " << combinations.problem_.getBestScoreKm() << endl;
-	cout<<"number of cities"<<combinations.problem_.problem->cities.size()<<endl;
+	}
 
+	auto duration = combinations->calculate();
 
-	//Save or cout
+	cout << "duration: " << duration <<" seconds"<< endl;
+	cout << "best score: " << combinations->problem_.getBestScoreKm() << endl;
+	cout<<"number of cities"<<combinations->problem_.problem->cities.size()<<endl;
+
+//Save or print to stdout
 	solution_t result;
-	result = combinations.problem_;
-	if (argc > 2) {
-		ofstream os(argv[2]); // open file
+	result = combinations->problem_;
+	if (argc > 3) {
+		ofstream os(argv[3]); // open file
 		os << result;
 	} else {
 		cout << result << endl;
 	}
 
-
-	visualize(&combinations.problem_);
+	visualize(&combinations->problem_);
   
 };
+
+std::map<std::string, std::function<solver_t*(solution_t)>> generate_methods_map() {
+  using namespace std;
+	map<string,std::function<solver_t*(solution_t)>> methodMap;
+
+	methodMap["bruteForce"] = [](auto experiment) {
+    return new chaseSequence(experiment);
+  };
+  	methodMap["hillClimb"] = [](auto experiment) {
+    return new hillClimber(experiment);
+  };
+  	methodMap["tabuSearch"] = [](auto experiment) {
+    return new tabuSearcher(experiment);
+  };
+  return methodMap;
+}
 
 
 void visualize(solution_t *problem){
