@@ -11,12 +11,17 @@ void tabuSearcher::gimmeSolution()
     init();
     bool exit = false;
     tabu_.push_back(problem_.warehouses);
-    for (int i = 0; i < (int)problem_.config_json["itertions"]; i++)
+    for (int i = 0; i < problem_.config_json["iterations"]; i++)
     {
+        auto score = problem_.bestScore;
         getNeighbours();
         checkTabu();
         checkNeighbours();
+        if (problem_.bestScore == score)
+            iterationsCounter_++;
     }
+
+    std::cout << "number of pointless iterations" << iterationsCounter_ << std::endl;
     std::cout<<max_tabu_size_<<std::endl;
     problem_.warehouses=bestWarehouses_;
     problem_.bestScore=bestGlobalScore_;
@@ -27,7 +32,7 @@ void tabuSearcher::init()
     std::random_device rd;                                                         // obtain a random number from hardware
     std::mt19937 eng(rd());                                                        // seed the generator
     std::uniform_int_distribution<> distr(0, problem_.problem->cities.size() - 1); // define the range
-
+    std::cout<<problem_.config_json["tabuSize"]<<std::endl;
     max_tabu_size_=problem_.config_json["tabuSize"];
     problem_.warehouses.clear();
     problem_.warehouses.push_back(distr(eng));

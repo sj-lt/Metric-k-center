@@ -15,6 +15,7 @@ public:
     std::vector<int> bestWarehouses_;
     double bestGlobalScore_;
     int max_tabu_size_=10;
+    int iterationsCounter_= 0;
     tabuSearcher(solution_t problem);
     tabuSearcher();
 

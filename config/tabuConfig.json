@@ -1,6 +1,7 @@
 {
-    "n_wh" : 10,
+    "n_wh" : 5,
     "iterations" : 10,
+    "tabuSize" : 10,
     "method" : "tabuSearch"
 }
 

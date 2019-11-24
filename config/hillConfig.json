@@ -1,5 +1,5 @@
 {
-    "n_wh" : 15,
+    "n_wh" : 5,
     "iterations" : 20,
     "method" : "hillClimb",
     "random" : "true"
