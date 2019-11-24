@@ -1,0 +1,9 @@
+{
+    "n_wh" : 15,
+    "iterations" : 20,
+    "method" : "hillClimb",
+    "random" : "true"
+
+}
+
+

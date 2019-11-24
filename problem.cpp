@@ -4,8 +4,9 @@
 #include "hillClimber.cpp"
 #include "tabuSearcher.cpp"
 #include "skel.cpp"
-#define WAREHOUSES 2
-
+/*
+*@returns distance beetwen cities
+**/
 double city_t::distance(city_t &c2)
 {
 	using namespace std;
@@ -21,16 +22,14 @@ double city_t::distance(city_t &c2)
 	auto d = R * c;
 	return d;
 }
-double solution_t::getBestScoreKm()
-{
-	return bestScore / 1000;
-}
-double solution_t::score()
-{ /*
+
+/*
 @brief
 *calculates score of cities and warehouses stored in class
 *@returns double score of warehouse configuration
 **/
+double solution_t::score()
+{ 
 
 	//std::cout<<"start score--------:"<<std::endl;
 	double dist ;
@@ -43,54 +42,44 @@ double solution_t::score()
 		bool ifWarehouse = false;
 		for (auto w : warehouses)
 		{
-			if (n == w){
-				
-				ifWarehouse = true;}
+			if (n == w)
+				ifWarehouse = true;
 		}
 		if (ifWarehouse)
 		{
-			n++;
-			continue;
+			n++;	continue;
 		}
 		else
 		{
 			for (int i = 1; i < warehouses.size(); i++)
 			{
-				/**
-                                                                         * get the nearest warehouse
-                                                                         *  **/
+                                                                         //get the nearest warehouse
 				if (i == 1)
-				{
-					//float a, b;
-					//a=city.distance(problem->cities.at(warehouses.at(0)));
-					//b=city.distance(problem->cities.at(warehouses.at(1)));
-					//std::cout<<"distance:"<<city.name<<problem->cities.at(warehouses.at(0)).name<<"  "<<a<<std::endl;
-					//std::cout<<"distance:"<<city.name<<problem->cities.at(warehouses.at(1)).name<<"  "<<b<<std::endl;
-					//tempDist = std::min(a,b	);
 					tempDist = std::min(problem->cities.at(h).distance(problem->cities.at(warehouses.at(0))),problem->cities.at(h).distance(problem->cities.at(warehouses.at(1)))	);
-				}
 				else
-				{
-					//std::cout<<"distance:"<<city.name<<problem->cities.at(warehouses.at(0)).name<<"  "<<a<<std::endl;
 					tempDist = std::min(tempDist, problem->cities.at(h).distance(problem->cities.at(warehouses.at(i))));
-				}
 			}
-			/**
-         * get farthest city from the nearest warehouse
-         *  **/
+         												//get farthest city from the nearest warehouse
 			if (n1 == 0)
 			{
-				dist = tempDist;
-				n1++;
+				dist = tempDist;	n1++;
 			}
-			dist = std::max(dist, tempDist);
-			n++;
+			dist = std::max(dist, tempDist);	n++;
 		}
 	}
-	//std::cout<<dist<<std::endl;
 	return dist;
 }
-
+/*
+*@returns score in km
+**/
+double solution_t::getBestScoreKm()
+{
+	return bestScore / 1000;
+}
+/*
+*@brief decode warehouses to cities
+*@returns list of city_t
+**/
 std::vector<city_t> solution_t::getCitySolution()
 {
 	std::vector<city_t> warehouseCities;
@@ -100,39 +89,44 @@ std::vector<city_t> solution_t::getCitySolution()
 	}
 	return warehouseCities;
 }
+//------------------------------------------CONSTRUCTORS-------------------------------------------
 
 solution_t::solution_t(std::shared_ptr<problem_t> problem_, nlohmann::json config_json)
 	: problem(problem_),
 	  config_json (config_json),
-	  numberOfWarehouses(config_json["numberOfWarehouses"]), bestScore(0),
-	  warehouses((int)config_json["numberOfWarehouses"])
+	  numberOfWarehouses(config_json["n_wh"]), bestScore(0),
+	  warehouses((int)config_json["n_wh"])
 {
-	for (int i = 0; i < (int)config_json["numberOfWarehouses"]; i++)
+	for (int i = 0; i < (int)config_json["n_wh"]; i++)
 		warehouses[i] = i;
 }
 
 solution_t::solution_t(std::vector<city_t> input_cities, nlohmann::json config_json)
 	: problem(std::make_shared<problem_t>(problem_t{input_cities})),
 	  config_json (config_json),
-	  numberOfWarehouses(config_json["numberOfWarehouses"]), bestScore(0),
-	  warehouses((int)config_json["numberOfWarehouses"])
+	  numberOfWarehouses(config_json["n_wh"]), bestScore(0),
+	  warehouses((int)config_json["n_wh"])
 {
-	for (int i = 0; i < (int)config_json["numberOfWarehouses"]; i++)
+	for (int i = 0; i < (int)config_json["n_wh"]; i++)
 		warehouses[i] = i;
 }
 
 solution_t::solution_t(nlohmann::json config_json)
-	:numberOfWarehouses((int)config_json["numberOfWarehouses"]),
+	:numberOfWarehouses((int)config_json["n_wh"]),
 	config_json (config_json),
 	bestScore(0),
-	warehouses((int)config_json["numberOfWarehouses"])
+	warehouses((int)config_json["n_wh"])
 {
-	for (int i = 0; i < (int)config_json["numberOfWarehouses"]; i++)
+	for (int i = 0; i < (int)config_json["n_wh"]; i++)
 		warehouses[i] = i;
 }
 
 solution_t::solution_t(){};
-
+//------------------------------------------OPERATORS-------------------------------------------
+/*
+@brief
+*writes solution do file
+**/
 std::ostream &operator<<(std::ostream &s, solution_t &sol)
 {
 	using json = nlohmann::json;
@@ -144,14 +138,19 @@ std::ostream &operator<<(std::ostream &s, solution_t &sol)
 		j["/cities/-"_json_pointer] = {city.name, city.longitude, city.latitude};
 	}
 	j["score"] = sol.getBestScoreKm();
+	j["timeSpend"] = sol.timeTaken;
+	j["config"] = sol.config_json;
 	s << j;
 
 	return s;
 }
-
+/*
+@brief
+*read cities from json
+**/
 std::istream &operator>>(std::istream &s, solution_t &sol)
 {
-	std::cout<<sol.config_json["numberOfWarehouses"]<<std::endl;
+	std::cout<<sol.config_json["n_wh"]<<std::endl;
 	nlohmann::json sol_json;
 	sol_json = sol_json.parse(s);
 	
@@ -165,9 +164,3 @@ std::istream &operator>>(std::istream &s, solution_t &sol)
 	sol = solnew;
 	return s;
 }
-/*std::istream &operator>>(std::istream &s, nlohmann::json &config_json)
-{
-	nlohmann::json config_json;
-	config_json = config_json.parse(s);
-	return s;
-}*/

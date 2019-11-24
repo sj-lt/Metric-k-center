@@ -1,7 +1,7 @@
 {
-    "numberOfWarehouses" : 10,
-    "method" : "hillClimb",
-    "tabuSize" : 200
+    "n_wh" : 10,
+    "iterations" : 10,
+    "method" : "tabuSearch"
 }
 
 

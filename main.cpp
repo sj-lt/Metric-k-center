@@ -2,10 +2,12 @@
 
 /*
 	build --->  
-				g++ main.cpp -std=c++17 -o ./build/kCenterProblem	
-	run    ---> 
-				./build/solverTester ./config/config.json ./input/citiesTest6Csv.json ./output/solverTester
-	run tabu --> 
+				mkdir build | g++ main.cpp -std=c++17 -o ./build/kCenterProblem	
+	run brute --> 
+				./build/kCenterProblem ./config/bruteConfig.json ./input/citiesTest6Csv.json ./output/bruteSolution.json
+	run hill  --> 
+				./build/kCenterProblem ./config/hillConfig.json ./input/citiesTest6Csv.json ./output/hillSolution.json
+	run tabu  --> 
 				./build/kCenterProblem ./config/tabuConfig.json ./input/citiesTest6Csv.json ./output/tabuSolution.json
 */
 std::map<std::string, std::function<solver_t*(solution_t)>> generate_methods_map() ;

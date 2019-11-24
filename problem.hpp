@@ -35,6 +35,7 @@ public:
   int numberOfWarehouses;
   nlohmann::json config_json;
 
+  double timeTaken;
   double bestScore ;
   double getBestScoreKm();
   double score();
@@ -61,5 +62,5 @@ double solver_t::calculate(){
     auto t1 = std::chrono::high_resolution_clock::now();
     gimmeSolution(); 
     auto t2 = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()/1000000.0;
+    return problem_.timeTaken = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()/1000000.0;
 }

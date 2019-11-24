@@ -11,7 +11,7 @@ void tabuSearcher::gimmeSolution()
     init();
     bool exit = false;
     tabu_.push_back(problem_.warehouses);
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < (int)problem_.config_json["itertions"]; i++)
     {
         getNeighbours();
         checkTabu();
