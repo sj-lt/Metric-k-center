@@ -1,9 +1,1 @@
-{
-    "n_wh" : 5,
-    "iterations" : 20,
-    "method" : "hillClimb",
-    "random" : "true"
-
-}
-
-
+{"n_wh":5,"iterations":20,"method":"hillClimb","random":"true","input":"./g_input/input-19.json","output":"./output/hillSolutionLog.json","id":"b195c589-68f5-41ca-9208-0532917828c8"}

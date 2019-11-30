@@ -14,7 +14,10 @@ void chaseSequence::gimmeSolution ()
 {
     init();
     bool exit = false;
+    long int i = 0;
     while(!exit){
+        using json = nlohmann::json;
+	    json logMsg = {}; 
         checkAnwsers();
         switch(findAnwsers()){ 
             case 1: moveLeftOne();break; 
@@ -23,6 +26,11 @@ void chaseSequence::gimmeSolution ()
             case 4: moveRightOne();break; 
             case 112: exit = true;break; 
         }
+        logMsg["iteration"]=i;
+        logMsg["score"]=problem_.score();
+        logMsg["bestScore"]=problem_.bestScore;
+        logMsg["config"]=problem_.config_json;
+        logger(logMsg);
     }
     
 }

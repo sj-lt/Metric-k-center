@@ -1,0 +1,7 @@
+{
+    "iterations" : 100,
+    "bruteForce" : "false",
+    "num_cities_b" : 18 ,
+    "num_cities_e" : 20 ,
+    "configs" : ["./config/hillConfig.json","./config/tabuConfig.json"] 
+}

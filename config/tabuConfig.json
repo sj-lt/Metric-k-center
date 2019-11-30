@@ -1,8 +1,1 @@
-{
-    "n_wh" : 5,
-    "iterations" : 10,
-    "tabuSize" : 10,
-    "method" : "tabuSearch"
-}
-
-
+{"n_wh":2,"iterations":100,"tabuSize":100,"method":"tabuSearch","input":"./g_input/input-19.json","output":"./output/tabuSolutionLog.json","id":"9018f8c8-75d4-4386-bca4-ee65aa5d91d8"}

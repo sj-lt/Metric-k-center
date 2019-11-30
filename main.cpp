@@ -2,13 +2,13 @@
 
 /*
 	build --->  
-				mkdir build | g++ main.cpp -std=c++17 -o ./build/kCenterProblem	
+				mkdir build | mkdir g_input | mkdir output | g++ main.cpp -std=c++17 -o ./build/kCenterProblem	
 	run brute --> 
-				./build/kCenterProblem ./config/bruteConfig.json ./input/citiesTest6Csv.json ./output/bruteSolution.json
+				./build/kCenterProblem ./config/bruteConfig.json 
 	run hill  --> 
-				./build/kCenterProblem ./config/hillConfig.json ./input/citiesTest6Csv.json ./output/hillSolution.json
+				./build/kCenterProblem ./config/hillConfig.json 
 	run tabu  --> 
-				./build/kCenterProblem ./config/tabuConfig.json ./input/citiesTest6Csv.json ./output/tabuSolution.json
+				./build/kCenterProblem ./config/tabuConfig.json 
 */
 std::map<std::string, std::function<solver_t*(solution_t)>> generate_methods_map() ;
 void visualize(solution_t *problem);
@@ -31,13 +31,13 @@ int main(int argc, char **argv)
 	solution_t experiment(config_json);
 
 //Read input data
-	if (argc > 2) {
-		ifstream is(argv[2]); // open file
+	if (experiment.config_json["input"].is_string()) {
+		ifstream is(experiment.config_json["input"]); // open file
 		is >> experiment;
 	} else {
 		cin >> experiment;
 	}
-
+cout<<"asd"<<endl;
 //load solver from configs
 	solver_t *combinations;
 	try{
@@ -53,7 +53,6 @@ int main(int argc, char **argv)
 	}
 
 	auto duration = combinations->calculate();
-
 	cout << "duration: " << duration <<" seconds"<< endl;
 	cout << "best score: " << combinations->problem_.getBestScoreKm() << endl;
 	cout<<"number of cities"<<combinations->problem_.problem->cities.size()<<endl;
@@ -61,9 +60,33 @@ int main(int argc, char **argv)
 //Save or print to stdout
 	solution_t result;
 	result = combinations->problem_;
-	if (argc > 3) {
-		ofstream os(argv[3]); // open file
-		os << result;
+
+	using json = nlohmann::json;
+	auto warehousesAsCities = result.getCitySolution();
+
+	for (auto city : warehousesAsCities)
+	{
+	json jx ={};
+	
+		jx["location"] =  {city.longitude,city.latitude};
+		jx["config"] =  result.config_json;
+		
+		combinations->logger(jx);
+	}
+		for (auto city : result.problem->cities)
+	{
+	json jx ={};
+
+		jx["location"] =  {city.longitude,city.latitude};
+		jx["config"] =  result.config_json;
+		combinations->logger(jx);
+
+	}
+
+
+	if (experiment.config_json["output"].is_string()) {
+		ofstream os(experiment.config_json["output"], std::ios_base::out | std::ios_base::app); // open file
+		os << result << '\n';
 	} else {
 		cout << result << endl;
 	}

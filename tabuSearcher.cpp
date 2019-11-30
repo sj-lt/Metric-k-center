@@ -13,15 +13,25 @@ void tabuSearcher::gimmeSolution()
     tabu_.push_back(problem_.warehouses);
     for (int i = 0; i < problem_.config_json["iterations"]; i++)
     {
-        auto score = problem_.bestScore;
+        
+        using json = nlohmann::json;
+	    json logMsg = {}; 
         getNeighbours();
         checkTabu();
         checkNeighbours();
-        if (problem_.bestScore == score)
-            iterationsCounter_++;
+
+
+        auto score = problem_.score();
+        logMsg["iteration"]=i;
+        json neighbours(neighbours_);
+        logMsg["neighbours"]=neighbours;
+        logMsg["score"]=score;
+        logMsg["bestScore"]=problem_.bestScore;
+        logMsg["config"]=problem_.config_json;
+
+        logger(logMsg);
     }
 
-    std::cout << "number of pointless iterations" << iterationsCounter_ << std::endl;
     std::cout<<max_tabu_size_<<std::endl;
     problem_.warehouses=bestWarehouses_;
     problem_.bestScore=bestGlobalScore_;
@@ -32,7 +42,6 @@ void tabuSearcher::init()
     std::random_device rd;                                                         // obtain a random number from hardware
     std::mt19937 eng(rd());                                                        // seed the generator
     std::uniform_int_distribution<> distr(0, problem_.problem->cities.size() - 1); // define the range
-    std::cout<<problem_.config_json["tabuSize"]<<std::endl;
     max_tabu_size_=problem_.config_json["tabuSize"];
     problem_.warehouses.clear();
     problem_.warehouses.push_back(distr(eng));
@@ -82,9 +91,7 @@ void tabuSearcher::checkNeighbours()
 
     if (neighbours_.size() <= 0)
     {
-        // impossible to find next solution
-        if (tabu_.size() > 1)
-            tabu_.pop_front();
+            //finish
     }
     else
     {
@@ -101,10 +108,13 @@ void tabuSearcher::checkNeighbours()
             {
                 newScore = problem_.score();
                 newSolution = problem_.warehouses;
+
             }
         }
 
         tabu_.push_back(newSolution);
+      
+
         if (newScore < bestGlobalScore_)
         {
             bestGlobalScore_ = newScore;

@@ -130,16 +130,13 @@ solution_t::solution_t(){};
 std::ostream &operator<<(std::ostream &s, solution_t &sol)
 {
 	using json = nlohmann::json;
-	json j = {};
-	auto warehousesAsCities = sol.getCitySolution();
+	json j={} ;
 
-	for (auto city : warehousesAsCities)
-	{
-		j["/cities/-"_json_pointer] = {city.name, city.longitude, city.latitude};
-	}
+
 	j["score"] = sol.getBestScoreKm();
 	j["timeSpend"] = sol.timeTaken;
 	j["config"] = sol.config_json;
+	j["summary"] = "true";
 	s << j;
 
 	return s;
