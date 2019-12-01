@@ -1,8 +1,14 @@
 {
     "iterations" : 100,
     "bruteForce" : "false",
+    "tabuAdditionalExperiments" : "true",
+    "tabuToAddExperiment" : 20,
     "tabuExperiment" : 10,
+    "hillAdditionalExperiments" : "true",
+    "hillTempToAddExperiment" : 4000,
+    "hillExperiment" : 10,  
     "num_cities_b" : 28 ,
     "num_cities_e" : 30 ,
+    "batch" : "wielblad" ,
     "configs" : ["./config/hillConfig.json","./config/tabuConfig.json"] 
 }

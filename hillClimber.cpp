@@ -48,6 +48,7 @@ void hillClimber::init()
     std::mt19937 eng(rd());                                                        // seed the generator
     std::uniform_int_distribution<> distr(0, problem_.problem->cities.size() - 1); // define the range
 
+    t_=problem_.config_json["temperature"];
     problem_.warehouses.clear();
     problem_.warehouses.push_back(distr(eng));
 

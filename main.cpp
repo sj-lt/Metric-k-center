@@ -68,7 +68,7 @@ cout<<"asd"<<endl;
 	{
 	json jx ={};
 	
-		jx["location"] =  {city.longitude,city.latitude};
+		jx["solution"]["location"] =  {city.longitude,city.latitude};
 		jx["config"] =  result.config_json;
 		
 		combinations->logger(jx);
@@ -77,7 +77,7 @@ cout<<"asd"<<endl;
 	{
 	json jx ={};
 
-		jx["location"] =  {city.longitude,city.latitude};
+		jx["problem"]["location"] =  {city.longitude,city.latitude};
 		jx["config"] =  result.config_json;
 		combinations->logger(jx);
 

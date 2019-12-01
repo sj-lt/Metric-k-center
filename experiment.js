@@ -43,33 +43,47 @@ for (let ix = 0; ix < config["iterations"]; ix++) {
                 var configName = file;
                 let methodConfig = require(config_folder + configName);
 
+                //----------------------------SETUP-AND-SAVE-EXPERIMETNS-CONFIG------------------------------
                 if(methodConfig["method"] == "tabuSearch"){
-                methodConfig["tabuSize"] = 10;
+                    methodConfig["tabuSize"] = config["tabuToAddExperiment"];
+                    var research=config["tabuExperiment"];
+                }
+                else if(methodConfig["method"] == "hillClimb"){
+                    methodConfig["temperature"] = config["hillTempToAddExperiment"];
+                    var research=config["hillExperiment"];
                 }
                 let dataJson = JSON.stringify(methodConfig);
                 fs.writeFileSync(config_folder + configName, dataJson);
 
-                var research=config["tabuExperiment"];
 
                 do{
-                //console.log("expoeriments" + x)
-                let methodConfig = require(config_folder + configName);
-                const uuidv4 = require('uuid/v4');
-                if(methodConfig["method"] == "tabuSearch"){
-                    var a = methodConfig["tabuSize"];
-                    var b = config["tabuExperiment"];
-                    methodConfig["tabuSize"] = a+b;
-                    research=research-1;
-                }
-                else{research = 0;} 
-                methodConfig["id"] = uuidv4();
-                methodConfig["input"] = './g_input/input-' + x + '.json';
-                let dataJson = JSON.stringify(methodConfig);
-                fs.writeFileSync(config_folder + configName, dataJson);
-
-                var command = "./build/kCenterProblem " + "./config/" + configName;
-                let stdout = execSync(command);
-                //console.log(stdout)
+                    //console.log("expoeriments" + x)
+                    let methodConfig = require(config_folder + configName);
+                    const uuidv4 = require('uuid/v4');
+                    //----------------------------EXTRA-EXPERIMENTS------------------------------
+                    if(methodConfig["method"] == "tabuSearch" && config["tabuAdditionalExperiments"]=="true"){
+                        var a = methodConfig["tabuSize"];
+                        var b = config["tabuToAddExperiment"];
+                        methodConfig["tabuSize"] = a+b;
+                        research=research-1;
+                    }
+                    else if(methodConfig["method"] == "hillClimb"&& config["hillAdditionalExperiments"]=="true"){
+                        var a = methodConfig["temperature"];
+                        var b = config["hillTempToAddExperiment"];
+                        methodConfig["temperature"] = a+b;
+                        research=research-1;
+                    }
+                    else{research = 0;} 
+                    //----------------------------SETUP-AND-SAVE-CONFIG------------------------------
+                    methodConfig["id"] = uuidv4();
+                    methodConfig["batch"] = config["batch"];
+                    methodConfig["input"] = './g_input/input-' + x + '.json';
+                    let dataJson = JSON.stringify(methodConfig);
+                    fs.writeFileSync(config_folder + configName, dataJson);
+                    //--------------------------------RUN-----------------------------------
+                    var command = "./build/kCenterProblem " + "./config/" + configName;
+                    let stdout = execSync(command);
+                    //console.log(stdout)
                 
                 }while(research>0)
 

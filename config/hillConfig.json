@@ -1,1 +1,1 @@
-{"n_wh":3,"iterations":50,"method":"hillClimb","annealing":"true","random":"false","input":"./g_input/input-29.json","output":"./output/hillSolutionLog.json","id":"b7a2503b-589b-41fa-ae5e-00c64709d1bd"}
+{"n_wh":3,"iterations":50,"method":"hillClimb","temperature":44000,"annealing":"true","random":"false","input":"./g_input/input-29.json","output":"./output/hillSolutionLog.json","id":"99c4d7db-08d6-4002-80e7-fc0da923ecdf","batch":"wielblad"}
