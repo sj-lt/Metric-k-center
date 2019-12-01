@@ -20,7 +20,11 @@ void hillClimber::gimmeSolution()
             getRandomNeighbours();
         else
             getNeighbours();
-        checkNeighbours();
+        if(problem_.config_json["annealing"] == "true")
+            checkNeighboursAnnealing();
+        else
+            checkNeighbours();
+
         auto score = problem_.score();
 
 
@@ -78,7 +82,50 @@ void hillClimber::checkNeighbours()
             problem_.bestScore = newScore;
     }
 }
+double hillClimber::T(){
+    return t_/(double)k_;
+}
+void hillClimber::checkNeighboursAnnealing()
+{
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 eng(rd());
+    std::vector<int> prevSolution = problem_.warehouses;
+    double prevScore = problem_.score();
+    std::uniform_real_distribution<double> distr(0.0, 1.0);
+    double newScore;
 
+    for (auto neighbour : neighbours_)
+    {
+
+        problem_.warehouses = neighbour;
+        //check score for new warehouses
+
+        newScore = problem_.score();
+        if (newScore > prevScore)
+        {
+            double u = distr(eng);
+            auto f_t_k = newScore;
+            auto f_s_k_1 = prevScore;
+            if (u < exp(-abs(f_t_k - f_s_k_1) / T()))
+            {
+                prevScore = newScore;
+            }
+            else
+            {
+                problem_.warehouses = prevSolution;
+            }
+        }
+        else
+        {
+            prevScore = newScore;
+        }
+        if (problem_.bestScore > newScore)
+        {
+
+            problem_.bestScore = newScore;
+        }
+    }
+}
 void hillClimber::getNeighbours()
 {
     std::vector<int> sol = problem_.warehouses;
@@ -91,6 +138,7 @@ void hillClimber::getNeighbours()
         //sol=problem_.warehouses;
         sol.at(i) = ((problem_.warehouses.at(i) + 1) % problem_.problem->cities.size());
         neighbours_.push_back(sol);
+        sol = problem_.warehouses;
         sol.at(i) = ((problem_.warehouses.at(i) - 1 + problem_.problem->cities.size()) % problem_.problem->cities.size());
         neighbours_.push_back(sol);
     }

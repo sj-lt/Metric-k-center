@@ -1,1 +1,1 @@
-{"n_wh":5,"iterations":20,"method":"hillClimb","random":"true","input":"./g_input/input-19.json","output":"./output/hillSolutionLog.json","id":"b195c589-68f5-41ca-9208-0532917828c8"}
+{"n_wh":3,"iterations":50,"method":"hillClimb","annealing":"true","random":"false","input":"./g_input/input-29.json","output":"./output/hillSolutionLog.json","id":"b7a2503b-589b-41fa-ae5e-00c64709d1bd"}

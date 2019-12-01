@@ -23,10 +23,11 @@ void tabuSearcher::gimmeSolution()
 
         auto score = problem_.score();
         logMsg["iteration"]=i;
+        std::cout<<i<<" | "<<score<<std::endl;
         json neighbours(neighbours_);
         logMsg["neighbours"]=neighbours;
         logMsg["score"]=score;
-        logMsg["bestScore"]=problem_.bestScore;
+        logMsg["bestScore"]=bestGlobalScore_;
         logMsg["config"]=problem_.config_json;
 
         logger(logMsg);

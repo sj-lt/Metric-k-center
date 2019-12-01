@@ -1,7 +1,8 @@
 {
     "iterations" : 100,
     "bruteForce" : "false",
-    "num_cities_b" : 18 ,
-    "num_cities_e" : 20 ,
+    "tabuExperiment" : 10,
+    "num_cities_b" : 28 ,
+    "num_cities_e" : 30 ,
     "configs" : ["./config/hillConfig.json","./config/tabuConfig.json"] 
 }

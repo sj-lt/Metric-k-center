@@ -36,24 +36,44 @@ for (let i = config["num_cities_b"]; i < config["num_cities_e"]; i++) {
 
 for (let ix = 0; ix < config["iterations"]; ix++) {
     for (let x = config["num_cities_b"]; x < config["num_cities_e"]; x++) {
-            console.log(x)
-        fs.readdirSync(config_folder).forEach(file => {
-            console.log("expoeriments" + x)
-            var config = file;
-            let configJson = require(config_folder + config);
-            const uuidv4 = require('uuid/v4');
+            //console.log(x);
 
-            configJson["id"] = uuidv4();
-            configJson["input"] = './g_input/input-' + x + '.json';
-            let dataJson = JSON.stringify(configJson);
-            fs.writeFileSync(config_folder + config, dataJson);
+            fs.readdirSync(config_folder).forEach(file => {
 
-            var command = "./build/kCenterProblem " + "./config/" + config;
-            //console.log("./build/kCenterProblem " + "./config/" + config )
-            let stdout = execSync(command);
-            console.log(stdout)
+                var configName = file;
+                let methodConfig = require(config_folder + configName);
 
-        });
+                if(methodConfig["method"] == "tabuSearch"){
+                methodConfig["tabuSize"] = 10;
+                }
+                let dataJson = JSON.stringify(methodConfig);
+                fs.writeFileSync(config_folder + configName, dataJson);
+
+                var research=config["tabuExperiment"];
+
+                do{
+                //console.log("expoeriments" + x)
+                let methodConfig = require(config_folder + configName);
+                const uuidv4 = require('uuid/v4');
+                if(methodConfig["method"] == "tabuSearch"){
+                    var a = methodConfig["tabuSize"];
+                    var b = config["tabuExperiment"];
+                    methodConfig["tabuSize"] = a+b;
+                    research=research-1;
+                }
+                else{research = 0;} 
+                methodConfig["id"] = uuidv4();
+                methodConfig["input"] = './g_input/input-' + x + '.json';
+                let dataJson = JSON.stringify(methodConfig);
+                fs.writeFileSync(config_folder + configName, dataJson);
+
+                var command = "./build/kCenterProblem " + "./config/" + configName;
+                let stdout = execSync(command);
+                //console.log(stdout)
+                
+                }while(research>0)
+
+            });
     }
 }
 /*
