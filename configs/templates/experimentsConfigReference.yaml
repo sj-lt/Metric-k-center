@@ -1,0 +1,28 @@
+#GENERAL
+n_wh: int #Number of warehouses
+iterations: int #Main loop iterations
+i: int #iterations in method
+batch: string #Batch name
+output: string #ending of output file structure : {method}{ending}.json
+#INPUT
+input: #Input quantity configuration
+  start: int #Initial value of input size
+  end: int #     
+  shift: int #
+  baseFile: './input/citiesTest6Csv.json' #base for creating input
+#METHODS
+bruteFroce: bool # calculate bruteForce?
+hillClimb: 
+  deterministic:
+    i: int #number of iterations
+  stochastic:
+    i: int #number of iterations
+  annealing:
+    i: int #number of iterations
+    t: int #initial Temperature value
+    t_s: int #Temperature shift
+tabuSearch:
+  i: int #number of iterations  t+=t_s
+  t: int #Tabu initial value
+  t_s: int #Tabu shift
+  

@@ -19,11 +19,8 @@ void tabuSearcher::gimmeSolution()
         getNeighbours();
         checkTabu();
         checkNeighbours();
-
-
         auto score = problem_.score();
         logMsg["iteration"]=i;
-        std::cout<<i<<" | "<<score<<std::endl;
         json neighbours(neighbours_);
         logMsg["neighbours"]=neighbours;
         logMsg["score"]=score;

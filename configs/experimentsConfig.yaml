@@ -1,0 +1,29 @@
+#GENERAL
+n_wh: 3 
+iterations: 100
+i: 100 #iterations in method
+batch: 'torbacz'
+output: 'Log' #ending of output file structure : {method}{ending}.json
+pPath: './build/kCenterProblem ' 
+#INPUT
+input:
+  start: 19
+  end: 20
+  shift: 1
+  baseFile: './input/citiesTest6Csv.json'
+#METHODS
+bruteForce: true
+hillClimb: 
+  deterministic:
+    i: 1
+  stochastic:
+    i: 1
+  annealing:
+    i: 1
+    t: 4000
+    t_s: 0
+tabuSearch:
+  i: 1
+  t: 50
+  t_s: 0
+  

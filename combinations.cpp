@@ -31,6 +31,7 @@ void chaseSequence::gimmeSolution ()
         logMsg["bestScore"]=problem_.bestScore;
         logMsg["config"]=problem_.config_json;
         logger(logMsg);
+        i++;
     }
     
 }

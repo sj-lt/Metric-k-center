@@ -133,7 +133,7 @@ std::ostream &operator<<(std::ostream &s, solution_t &sol)
 	json j={} ;
 
 
-	j["score"] = sol.getBestScoreKm();
+	j["TotalBestscore"] = sol.getBestScoreKm();
 	j["timeSpend"] = sol.timeTaken;
 	j["config"] = sol.config_json;
 	j["summary"] = "true";

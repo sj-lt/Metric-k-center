@@ -47,8 +47,18 @@ void hillClimber::init()
     std::random_device rd;                                                         // obtain a random number from hardware
     std::mt19937 eng(rd());                                                        // seed the generator
     std::uniform_int_distribution<> distr(0, problem_.problem->cities.size() - 1); // define the range
+    if(problem_.config_json["temperature"].is_string())
+        t_=problem_.config_json["temperature"];
+    std::string method = problem_.config_json["method"];
+    if(problem_.config_json["random"] == "true")
+        problem_.config_json["method"] = method+"Sto";
+    else
+        problem_.config_json["method"] = method+"Det";
+    
+    
+    if(problem_.config_json["annealing"] == "true")
+        problem_.config_json["method"] = method+"Ann";
 
-    t_=problem_.config_json["temperature"];
     problem_.warehouses.clear();
     problem_.warehouses.push_back(distr(eng));
 
@@ -134,8 +144,6 @@ void hillClimber::getNeighbours()
     
     for (int i = 0; i < problem_.numberOfWarehouses; i++)
     {
-
-    std::cout << i<< std::endl;
         //sol=problem_.warehouses;
         sol.at(i) = ((problem_.warehouses.at(i) + 1) % problem_.problem->cities.size());
         neighbours_.push_back(sol);
