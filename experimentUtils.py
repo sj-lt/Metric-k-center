@@ -43,19 +43,24 @@ def createConfig(GlobalConfig,input,method,config):
     return config
 
 def bruteForce(GlobalConfig,input):
+    configGlobal = {}
+    configGlobal['logIteration'] = str(GlobalConfig['hillClimb']['logIterations'])
     if(GlobalConfig['bruteForce']):
         configPath='./g_config/bruteConfig.json'
-        config = {}
+        config = configGlobal
         config = createConfig(GlobalConfig,input,'bruteForce',config)
         with open(configPath,'w+') as configFile:
             json.dump(config,configFile)
         out = call_proc(GlobalConfig['pPath']+configPath)
         
 def hillClimb(GlobalConfig,input):
+    configGlobal = {}
+    configGlobal['logIteration'] = str(GlobalConfig['hillClimb']['logIterations'])
+    
     #--------------------DETERMINISTIC
     for i in range(GlobalConfig['hillClimb']['deterministic']['i']):
         configPath='./g_config/hillDetConfig.json'
-        config = {}
+        config = configGlobal
         config['annealing'] = 'false'
         config['random'] = 'false'
         config = createConfig(GlobalConfig,input,'hillClimb',config)
@@ -65,7 +70,7 @@ def hillClimb(GlobalConfig,input):
     #--------------------STOCHASTIC
     for i in range(GlobalConfig['hillClimb']['stochastic']['i']):
         configPath='./g_config/hillStoConfig.json'
-        config = {}
+        config = configGlobal
         config['annealing'] = 'false'
         config['random'] = 'true'
         config = createConfig(GlobalConfig,input,'hillClimb',config)
@@ -75,25 +80,27 @@ def hillClimb(GlobalConfig,input):
     #--------------------ANNEALING
     for i in range(GlobalConfig['hillClimb']['annealing']['i']):
         configPath='./g_config/hillAnnConfig.json'
-        config = {}
+        config = configGlobal
         config['annealing'] = 'true'
         config['random'] = 'false'
         if(i==0):
             config['temperature'] = GlobalConfig['hillClimb']['annealing']['t']
         else:
-            config['temperature']+=GlobalConfig['hillClimb']['annealing']['t_s']
+            config['temperature']=GlobalConfig['hillClimb']['annealing']['t'] + i*GlobalConfig['hillClimb']['annealing']['t_s']
         config = createConfig(GlobalConfig,input,'hillClimb',config)
         with open(configPath,'w+') as configFile:
             json.dump(config,configFile)
         out = call_run(GlobalConfig['pPath']+configPath)
 def tabuSearch(GlobalConfig,input):
+    configGlobal = {}
+    configGlobal['logIteration'] = str(GlobalConfig['tabuSearch']['logIterations'])
     for i in range(GlobalConfig['tabuSearch']['i']):
         configPath='./g_config/tabuConfig.json'
-        config = {}
+        config = configGlobal
         if(i==0):
             config['tabuSize'] = GlobalConfig['tabuSearch']['t']
         else:
-            config['tabuSize']+=GlobalConfig['tabuSearch']['t_s']
+            config['tabuSize']=GlobalConfig['tabuSearch']['t'] + i*GlobalConfig['tabuSearch']['t_s']
         config = createConfig(GlobalConfig,input,'tabuSearch',config)
         with open(configPath,'w+') as configFile:
             json.dump(config,configFile)

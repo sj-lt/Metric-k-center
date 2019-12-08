@@ -35,8 +35,8 @@ void hillClimber::gimmeSolution()
         logMsg["score"]=score;
         logMsg["bestScore"]=problem_.bestScore;
         logMsg["config"]=problem_.config_json;
-
-        logger(logMsg);
+        if(logIteration_=="true")
+            logger(logMsg);
 
     }
 }
@@ -59,6 +59,7 @@ void hillClimber::init()
     if(problem_.config_json["annealing"] == "true")
         problem_.config_json["method"] = method+"Ann";
 
+    logIteration_ = problem_.config_json["logIteration"];
     problem_.warehouses.clear();
     problem_.warehouses.push_back(distr(eng));
 

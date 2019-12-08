@@ -37,7 +37,6 @@ int main(int argc, char **argv)
 	} else {
 		cin >> experiment;
 	}
-cout<<"asd"<<endl;
 //load solver from configs
 	solver_t *combinations;
 	try{

@@ -30,7 +30,8 @@ void chaseSequence::gimmeSolution ()
         logMsg["score"]=problem_.score();
         logMsg["bestScore"]=problem_.bestScore;
         logMsg["config"]=problem_.config_json;
-        logger(logMsg);
+        if(logIteration_=="true")
+            logger(logMsg);
         i++;
     }
     
@@ -39,6 +40,7 @@ void chaseSequence::gimmeSolution ()
 void chaseSequence::init()
 {
     problem_.bestScore = problem_.score();
+    logIteration_ = problem_.config_json["logIteration"];
     //set anwsers vector
     for (int j = 0; j < s_; j++)
     {

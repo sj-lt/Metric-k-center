@@ -5,7 +5,11 @@
 /csv
 /.idea
 /.vscode
-
+/g_input
+/node_modules
+/__pycache__
+/config2
+.gitignore
 *.html
 # Prerequisites
 *.d

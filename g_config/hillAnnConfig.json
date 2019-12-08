@@ -1,0 +1,1 @@
+{"logIteration": "true", "annealing": "true", "random": "false", "iterations": 100, "n_wh": 3, "method": "hillClimb", "input": "./g_input/input-100.json", "output": "./output/hillClimbLog.json", "batch": "parameters3", "id": "3afce632-bbd0-41ca-92b4-41c4670a76d3", "temperature": 4000}

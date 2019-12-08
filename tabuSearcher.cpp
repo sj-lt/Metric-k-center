@@ -26,8 +26,8 @@ void tabuSearcher::gimmeSolution()
         logMsg["score"]=score;
         logMsg["bestScore"]=bestGlobalScore_;
         logMsg["config"]=problem_.config_json;
-
-        logger(logMsg);
+        if(logIteration_=="true")
+            logger(logMsg);
     }
 
     std::cout<<max_tabu_size_<<std::endl;
@@ -40,6 +40,8 @@ void tabuSearcher::init()
     std::random_device rd;                                                         // obtain a random number from hardware
     std::mt19937 eng(rd());                                                        // seed the generator
     std::uniform_int_distribution<> distr(0, problem_.problem->cities.size() - 1); // define the range
+
+    logIteration_ = problem_.config_json["logIteration"];
     max_tabu_size_=problem_.config_json["tabuSize"];
     problem_.warehouses.clear();
     problem_.warehouses.push_back(distr(eng));

@@ -1,8 +1,8 @@
 #GENERAL
 n_wh: 3 
-iterations: 100
+iterations: 1
 i: 100 #iterations in method
-batch: 'torbacz'
+batch: 'parameters3'
 output: 'Log' #ending of output file structure : {method}{ending}.json
 pPath: './build/kCenterProblem ' 
 #INPUT
@@ -13,7 +13,9 @@ input:
   baseFile: './input/citiesTest6Csv.json'
 #METHODS
 bruteForce: true
+bruteForceLogIteraions: 'true'
 hillClimb: 
+  logIterations: 'true'
   deterministic:
     i: 1
   stochastic:
@@ -21,9 +23,10 @@ hillClimb:
   annealing:
     i: 1
     t: 4000
-    t_s: 0
+    t_s: 4000
 tabuSearch:
+  logIterations: 'true'
   i: 1
   t: 50
-  t_s: 0
+  t_s: 50
   

@@ -19,6 +19,10 @@ for input in inputs:
     p.start()
     for i in range(GlobalConfig['iterations']):
         i=1
+        # p = mp.Process(target = eU.hillClimb,args=(GlobalConfig,input))
+        # p.start()
+        # p = mp.Process(target = eU.tabuSearch,args=(GlobalConfig,input))
+        # p.start()
         eU.hillClimb(GlobalConfig,input)
         eU.tabuSearch(GlobalConfig,input)
     

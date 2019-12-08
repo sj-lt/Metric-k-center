@@ -53,6 +53,7 @@ public:
  class solver_t {
   public:
     solution_t problem_;
+    std::string logIteration_;
     void virtual gimmeSolution()=0;
     double calculate();
     inline void logger(nlohmann::json logMsg);

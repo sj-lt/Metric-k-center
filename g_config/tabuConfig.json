@@ -1,0 +1,1 @@
+{"logIteration": "true", "tabuSize": 50, "iterations": 100, "n_wh": 3, "method": "tabuSearch", "input": "./g_input/input-100.json", "output": "./output/tabuSearchLog.json", "batch": "parameters3", "id": "3ae9ec35-4ff7-4f46-b88b-5c8a471a9bd8"}
