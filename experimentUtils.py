@@ -6,13 +6,11 @@ import uuid
 
 def call_proc(cmd):
     """ This runs in a separate thread. """
-    #subprocess.call(shlex.split(cmd))  # This will block until cmd finishes
     p = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
     return (out, err)
 def call_run(cmd):
     """ This runs in a separate thread. """
-    #subprocess.call(shlex.split(cmd))  # This will block until cmd finishes
     p = subprocess.run(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 def prepareInputs(GlobalConfig):

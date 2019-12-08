@@ -1,4 +1,4 @@
-import multiprocessing
+import multiprocessing as mp
 import subprocess
 import shlex
 import yaml
@@ -15,11 +15,14 @@ inputs = eU.prepareInputs(GlobalConfig)
 iterations = GlobalConfig['iterations']
 
 for input in inputs:
-    eU.bruteForce(GlobalConfig,input)
+    p = mp.Process(target = eU.bruteForce,args=(GlobalConfig,input))
+    p.start()
     for i in range(GlobalConfig['iterations']):
         i=1
         eU.hillClimb(GlobalConfig,input)
         eU.tabuSearch(GlobalConfig,input)
+    
+print("finito")
 
 
 

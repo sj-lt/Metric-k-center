@@ -7,8 +7,8 @@ output: 'Log' #ending of output file structure : {method}{ending}.json
 pPath: './build/kCenterProblem ' 
 #INPUT
 input:
-  start: 19
-  end: 20
+  start: 100
+  end: 101
   shift: 1
   baseFile: './input/citiesTest6Csv.json'
 #METHODS
