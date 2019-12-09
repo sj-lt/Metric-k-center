@@ -1,1 +1,1 @@
-{"logIteration": "true", "n_wh": 3, "method": "bruteForce", "input": "./g_input/input-100.json", "output": "./output/bruteForceLog.json", "batch": "parameters3", "id": "507e08b7-470b-4448-b7c5-6e4822563f5e"}
+{"logIteration": "false", "n_wh": 3, "method": "bruteForce", "input": "./g_input/input-190.json", "output": "./output/bruteForceLog.json", "batch": "parameters3", "id": "18c72798-b83e-4c9d-9733-504072448545"}

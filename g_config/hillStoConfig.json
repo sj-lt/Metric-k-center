@@ -1,1 +1,1 @@
-{"logIteration": "true", "annealing": "false", "random": "true", "iterations": 100, "n_wh": 3, "method": "hillClimb", "input": "./g_input/input-100.json", "output": "./output/hillClimbLog.json", "batch": "parameters3", "id": "1165bdb1-47af-4ec1-967d-3d05cd39ce26"}
+{"logIteration": "false", "annealing": "false", "random": "true", "iterations": 100, "n_wh": 3, "method": "hillClimb", "input": "./g_input/input-190.json", "output": "./output/hillClimbLog.json", "batch": "parameters3", "id": "b5457993-474d-43b6-b955-b03c7b9faaab"}

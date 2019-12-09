@@ -15,35 +15,17 @@ inputs = eU.prepareInputs(GlobalConfig)
 iterations = GlobalConfig['iterations']
 
 for input in inputs:
+    #bruteforce as separate proceses
     p = mp.Process(target = eU.bruteForce,args=(GlobalConfig,input))
     p.start()
     for i in range(GlobalConfig['iterations']):
-        i=1
+        #uses all cpu 
         # p = mp.Process(target = eU.hillClimb,args=(GlobalConfig,input))
         # p.start()
         # p = mp.Process(target = eU.tabuSearch,args=(GlobalConfig,input))
         # p.start()
-        eU.hillClimb(GlobalConfig,input)
-        eU.tabuSearch(GlobalConfig,input)
+         eU.hillClimb(GlobalConfig,input)
+         eU.tabuSearch(GlobalConfig,input)
     
 print("finito")
-
-
-
-
-
-
-
-#pool = ThreadPool(multiprocessing.cpu_count())
-#results = []
-
-#results.append(pool.apply_async(call_proc, ("./combine" + arguments,)))
-
-# Close the pool and wait for each running task to complete
-#pool.close()
-#pool.join()
-# for result in results:
-#     out, err = result.get()
-#     print("out: {} err: {}".format(out, err))
-# subprocess.call("./merge_resized_images")
 
