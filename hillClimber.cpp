@@ -94,8 +94,8 @@ void hillClimber::checkNeighbours()
             problem_.bestScore = newScore;
     }
 }
-double hillClimber::T(){
-    return t_/(double)k_;
+double hillClimber::T(int k){
+    return t_/(double)k;
 }
 void hillClimber::checkNeighboursAnnealing()
 {
@@ -105,10 +105,10 @@ void hillClimber::checkNeighboursAnnealing()
     double prevScore = problem_.score();
     std::uniform_real_distribution<double> distr(0.0, 1.0);
     double newScore;
-
+    int k = 0;
     for (auto neighbour : neighbours_)
-    {
-
+    {   
+        k++;
         problem_.warehouses = neighbour;
         //check score for new warehouses
 
@@ -118,7 +118,7 @@ void hillClimber::checkNeighboursAnnealing()
             double u = distr(eng);
             auto f_t_k = newScore;
             auto f_s_k_1 = prevScore;
-            if (u < exp(-abs(f_t_k - f_s_k_1) / T()))
+            if (u < exp(-abs(f_t_k - f_s_k_1) / T(k)))
             {
                 prevScore = newScore;
             }

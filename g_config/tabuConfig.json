@@ -1,1 +1,1 @@
-{"logIteration": "false", "tabuSize": 1500, "iterations": 100, "n_wh": 3, "method": "tabuSearch", "input": "./g_input/input-190.json", "output": "./output/tabuSearchLog.json", "batch": "parameters3", "id": "94fcd8d0-c725-4ccb-aa57-4752a4c928e9"}
+{"logIteration": "false", "tabuSize": 50, "iterations": 100, "n_wh": 3, "method": "tabuSearch", "input": "./g_input/input-60.json", "output": "./output/tabuSearchLog.json", "batch": "parameters3", "id": "d8b2b40b-ea51-4403-a239-6a9e0da9f59f"}
