@@ -24,6 +24,8 @@ public:
     int initPopulation_;
     double crossover_probability_;
     double mutation_probability_;
+    std::pair<std::vector<int>,double> bestSolEver_;
+    double bestScore_;
     genetic(solution_t problem);
     genetic();
     void init();
@@ -46,14 +48,15 @@ public:
         crossoverMap_{
             {"crossover", &crossover}};
     ;
-    geneticDoubleFunction fitFuncPtr_;
-    geneticVoidFunction mutFuncPtr_;
-    geneticVoidFunction selFuncPtr_;
-    geneticVoidFunction crosFuncPtr_;
+    geneticDoubleFunction fitnessFuncPtr_;
+    geneticVoidFunction mutationFuncPtr_;
+    geneticVoidFunction selectionFuncPtr_;
+    geneticVoidFunction crossoverFuncPtr_;
 
 private:
     double fitness(double score);
     void generatePopulation();
+    void calculateFitnesses();
     solContainer genRandSolution();
     void mutation();
     void selection();
