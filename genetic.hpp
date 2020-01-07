@@ -8,6 +8,7 @@
 #include <functional>
 #include <algorithm>
 #include "problem.hpp"
+#include "json.hpp"
 
 class genetic : public solver_t
 {
@@ -24,13 +25,14 @@ public:
     int initPopulation_;
     double crossover_probability_;
     double mutation_probability_;
-    std::pair<std::vector<int>,double> bestSolEver_;
+    std::pair<std::vector<int>, double> bestSolEver_;
     double bestScore_;
     genetic(solution_t problem);
     genetic();
     void init();
     void gimmeSolution();
-    typedef void (genetic::*geneticVoidFunction)() ;
+    typedef void (genetic::*geneticVoidFunction)();
+    typedef bool (genetic::*geneticBoolFunction)();
     typedef double (genetic::*geneticDoubleFunction)(double);
 
     std::unordered_map<std::string, geneticDoubleFunction>
@@ -38,29 +40,33 @@ public:
             {"fitness", &fitness}};
     std::unordered_map<std::string, geneticVoidFunction>
         mutationMap_{
-            {"mutation", &mutation}};
-    ;
+            {"twoPointSwapMutation", &twoPointSwapMutation}};
     std::unordered_map<std::string, geneticVoidFunction>
         selectionMap_{
-            {"selection", &selection}};
-    ;
+            {"tournamentSelection", &tournamentSelection}};
     std::unordered_map<std::string, geneticVoidFunction>
         crossoverMap_{
-            {"crossover", &crossover}};
-    ;
+            {"twoPointCrossover", &twoPointCrossover}};
+    std::unordered_map<std::string, geneticBoolFunction>
+        terminationMap_{
+            {"iterationTerminator", &iterationTerminator}};
     geneticDoubleFunction fitnessFuncPtr_;
     geneticVoidFunction mutationFuncPtr_;
     geneticVoidFunction selectionFuncPtr_;
     geneticVoidFunction crossoverFuncPtr_;
+    geneticBoolFunction terminationFuncPtr_;
 
 private:
+    nlohmann::json buildLogMessage();
     double fitness(double score);
     void generatePopulation();
     void calculateFitnesses();
     solContainer genRandSolution();
-    void mutation();
-    void selection();
-    void crossover();
+    void twoPointSwapMutation();
+    void tournamentSelection();
+    void twoPointCrossover();
+    bool iterationTerminator();
+    bool standardDeviationTerminator();
     std::vector<int> parseSolutionBool(const solContainer &sol);
     solContainer parseSolutionInt(std::vector<int> &sol);
 };

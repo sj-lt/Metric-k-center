@@ -1,49 +1,51 @@
 #include "genetic.hpp"
-#include "json.hpp"
 std::random_device rd;
 std::mt19937 eng(rd());
 
 void genetic::gimmeSolution()
 {
     init();
-    for (int i = 0; i < problem_.config_json["iterations"]; i++)
+    while ((this->*terminationFuncPtr_)())
     {
-        //randoms from firsdt try lost in bestscore
-        using json = nlohmann::json;
-        json logMsg = {};
-        //select parents
+
         (this->*selectionFuncPtr_)();
         (this->*crossoverFuncPtr_)();
         (this->*mutationFuncPtr_)();
         population_ = children_;
         calculateFitnesses();
 
-        logMsg["iteration"] = i;
-        json fitnesses(fitnesses_);
-        logMsg["fitnesses"] = fitnesses;
-        logMsg["score"] = bestScore_;
-        logMsg["bestScore"] = bestSolEver_.second;
-        logMsg["config"] = problem_.config_json;
-        if (logIteration_ == "true")
-            logger(logMsg);
+        if (problem_.config_json["logIteration"] == "true")
+            logger(buildLogMessage());
+        iterationsCounter_++;
     }
 
     problem_.warehouses = bestSolEver_.first;
     problem_.bestScore = bestSolEver_.second;
 }
-
+nlohmann::json genetic::buildLogMessage()
+{
+    using json = nlohmann::json;
+    json logMsg = {};
+    logMsg["iteration"] = iterationsCounter_;
+    json fitnesses(fitnesses_);
+    logMsg["fitnesses"] = fitnesses;
+    logMsg["score"] = bestScore_;
+    logMsg["bestScore"] = bestSolEver_.second;
+    logMsg["config"] = problem_.config_json;
+}
 void genetic::init()
 {
     std::cout << "start init" << std::endl;
-
+    iterationsCounter_ = 0;
     initPopulation_ = problem_.config_json["initPopulation"];
-    crossover_probability_ = problem_.config_json["crossover_probability"];
-    mutation_probability_ = problem_.config_json["mutation_probability"];
+    crossover_probability_ = problem_.config_json["crossoverProbability"];
+    mutation_probability_ = problem_.config_json["mutationProbability"];
 
     fitnessFuncPtr_ = fitnessMap_[problem_.config_json["fitFunc"]];
     mutationFuncPtr_ = mutationMap_[problem_.config_json["mutFunc"]];
     selectionFuncPtr_ = selectionMap_[problem_.config_json["selFunc"]];
     crossoverFuncPtr_ = crossoverMap_[problem_.config_json["crosFunc"]];
+    terminationFuncPtr_ = terminationMap_[problem_.config_json["termFunc"]];
     generatePopulation();
     calculateFitnesses();
     std::cout << "finish init" << std::endl;
@@ -56,8 +58,8 @@ void genetic::generatePopulation()
         if (!i)
         {
             problem_.warehouses = parseSolutionBool(population_.back);
-            bestSolEver_.second=problem_.score();
-            bestSolEver_.first=problem_.warehouses;
+            bestSolEver_.second = problem_.score();
+            bestSolEver_.first = problem_.warehouses;
         }
     }
 }
@@ -104,8 +106,7 @@ double genetic::fitness(double goal)
     return 1000.0 / (1.0 + goal);
 }
 
-
-void genetic::selection()
+void genetic::tournamentSelection()
 {
     std::uniform_int_distribution<> distr(0, problem_.config_json["initPopulation"].size() - 1);
     for (unsigned int i = 0; i < problem_.config_json["initPopulation"]; i++)
@@ -117,7 +118,7 @@ void genetic::selection()
     }
 };
 
-void genetic::crossover()
+void genetic::twoPointCrossover()
 {
     std::uniform_int_distribution<> distrInt(0, problem_.problem->cities.size() - 1);
     std::uniform_real_distribution<> distrReal(0, 1);
@@ -127,23 +128,31 @@ void genetic::crossover()
         double u = distrReal(eng);
         if (problem_.config_json["crossover_probability"] < u)
         {
-            int p1 = distrInt(eng);
-            int p2 = distrInt(eng);
+            int p1, p2;
             bool isEqual = false;
             while (!isEqual) //check number of warehouses inside need to mach else wrong solution
             {
+                int p1 = distrInt(eng);
+                int p2 = distrInt(eng);
                 if (p1 > p2)
+                {
                     std::swap(p1, p2);
-                int p1 = 0, p2 = 0;
+                }
                 for (int j = p1; j < p2; i++)
                 {
                     if (parents_[i][j])
+                    {
                         p1++;
+                    }
                     if (parents_[i + 1][j])
+                    {
                         p2++;
+                    }
                 }
                 if (p1 == p2)
+                {
                     isEqual = true;
+                }
             }
 
             solContainer newBorn1 = parents_[i];
@@ -165,7 +174,7 @@ void genetic::crossover()
     }
 };
 //move warehouse to different location(random)
-void genetic::mutation()
+void genetic::twoPointSwapMutation()
 {
     std::uniform_int_distribution<> distrNew(0, problem_.problem->cities.size() - 1);
     std::uniform_int_distribution<> distrOld(0, problem_.numberOfWarehouses - 1);
@@ -194,6 +203,21 @@ void genetic::mutation()
         }
     }
 };
+bool genetic::iterationTerminator()
+{
+    return iterationsCounter_ < problem_.config_json["iterations"] ? true : false;
+};
+bool genetic::standardDeviationTerminator()
+{
+    double expected = 1.0;
+    double mean = std::accumulate(fitnesses_.begin(), fitnesses_.end(), 0.0) / fitnesses_.size();
+    double sq_sum =
+        inner_product(fitnesses_.begin(), fitnesses_.end(), fitnesses_.begin(), 0.0, std::plus<>(),
+                      [mean](double const &x) { return (x - mean) * (x - mean); });
+    double sd = std::sqrt(sd / fitnesses_.size());
+    return sd > expected ? true : false;
+}
+
 std::vector<int> genetic::parseSolutionBool(const solContainer &sol)
 {
     int i = 0;
