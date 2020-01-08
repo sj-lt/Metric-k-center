@@ -37,19 +37,19 @@ public:
 
     std::unordered_map<std::string, geneticDoubleFunction>
         fitnessMap_{
-            {"fitness", &fitness}};
+            {"fitness", &genetic::fitness}};
     std::unordered_map<std::string, geneticVoidFunction>
         mutationMap_{
-            {"twoPointSwapMutation", &twoPointSwapMutation}};
+            {"twoPointSwapMutation", &genetic::twoPointSwapMutation}};
     std::unordered_map<std::string, geneticVoidFunction>
         selectionMap_{
-            {"tournamentSelection", &tournamentSelection}};
+            {"tournamentSelection", &genetic::tournamentSelection}};
     std::unordered_map<std::string, geneticVoidFunction>
         crossoverMap_{
-            {"twoPointCrossover", &twoPointCrossover}};
+            {"twoPointCrossover", &genetic::twoPointCrossover}};
     std::unordered_map<std::string, geneticBoolFunction>
         terminationMap_{
-            {"iterationTerminator", &iterationTerminator}};
+            {"iterationTerminator", &genetic::iterationTerminator}};
     geneticDoubleFunction fitnessFuncPtr_;
     geneticVoidFunction mutationFuncPtr_;
     geneticVoidFunction selectionFuncPtr_;

@@ -1,10 +1,5 @@
 #include "hillClimber.hpp"
 #include "json.hpp"
-hillClimber::hillClimber(solution_t problem)
-{
-
-    problem_ = problem;
-}
 
 void hillClimber::gimmeSolution()
 {
@@ -185,3 +180,8 @@ void hillClimber::getRandomNeighbours()
     neighbours_.push_back(sol);
 
 }
+hillClimber::hillClimber(solution_t problem)
+{
+    problem_ = problem;
+}
+

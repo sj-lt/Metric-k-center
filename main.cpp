@@ -9,8 +9,11 @@
 				./build/kCenterProblem ./config/hillConfig.json 
 	run tabu  --> 
 				./build/kCenterProblem ./config/tabuConfig.json 
+	run ga  --> 
+				./build/kCenterProblem ./config/gaConfig.json 
 */
 std::map<std::string, std::function<solver_t*(solution_t)>> generate_methods_map() ;
+void saveOrPrint(solver_t *combinations);
 void visualize(solution_t *problem);
 int main(int argc, char **argv)
 {
@@ -56,10 +59,33 @@ int main(int argc, char **argv)
 	cout << "best score: " << combinations->problem_.getBestScoreKm() << endl;
 	cout<<"number of cities"<<combinations->problem_.problem->cities.size()<<endl;
 
-//Save or print to stdout
+	saveOrPrint(combinations);
+	visualize(&combinations->problem_);
+  
+};
+
+std::map<std::string, std::function<solver_t*(solution_t)>> generate_methods_map() {
+  using namespace std;
+	map<string,std::function<solver_t*(solution_t)>> methodMap;
+
+	methodMap["bruteForce"] = [](auto experiment) {
+    return new chaseSequence(experiment);
+  };
+  	methodMap["hillClimb"] = [](auto experiment) {
+    return new hillClimber(experiment);
+  };
+  	methodMap["tabuSearch"] = [](auto experiment) {
+    return new tabuSearcher(experiment);
+  };
+  	methodMap["geneticAlgorithm"] = [](auto experiment) {
+    return new genetic(experiment);
+  };
+  return methodMap;
+}
+void saveOrPrint(solver_t *combinations){
+	using namespace std;
 	solution_t result;
 	result = combinations->problem_;
-
 	using json = nlohmann::json;
 	auto warehousesAsCities = result.getCitySolution();
 
@@ -79,37 +105,15 @@ int main(int argc, char **argv)
 		jx["problem"]["location"] =  {city.longitude,city.latitude};
 		jx["config"] =  result.config_json;
 		combinations->logger(jx);
-
 	}
 
-
-	if (experiment.config_json["output"].is_string()) {
-		ofstream os(experiment.config_json["output"], std::ios_base::out | std::ios_base::app); // open file
+	if (result.config_json["output"].is_string()) {
+		ofstream os(result.config_json["output"], std::ios_base::out | std::ios_base::app); // open file
 		os << result << '\n';
 	} else {
 		cout << result << endl;
 	}
-
-	visualize(&combinations->problem_);
-  
-};
-
-std::map<std::string, std::function<solver_t*(solution_t)>> generate_methods_map() {
-  using namespace std;
-	map<string,std::function<solver_t*(solution_t)>> methodMap;
-
-	methodMap["bruteForce"] = [](auto experiment) {
-    return new chaseSequence(experiment);
-  };
-  	methodMap["hillClimb"] = [](auto experiment) {
-    return new hillClimber(experiment);
-  };
-  	methodMap["tabuSearch"] = [](auto experiment) {
-    return new tabuSearcher(experiment);
-  };
-  return methodMap;
 }
-
 
 void visualize(solution_t *problem){
   std::ofstream htmlout("vis.html");

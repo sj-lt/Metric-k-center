@@ -3,6 +3,7 @@
 #include "combinations.cpp"
 #include "hillClimber.cpp"
 #include "tabuSearcher.cpp"
+#include "genetic.cpp"
 #include "skel.cpp"
 /*
 *@returns distance beetwen cities

@@ -1,0 +1,18 @@
+{
+    "logIteration": "true",
+    "n_wh": 3,
+    "iterations": 10,
+    "initPopulation": 40,
+    "crossoverProbability": 0.8,
+    "mutationProbability": 0.2,
+    "fitFunc": "fitness",
+    "mutFunc": "twoPointSwapMutation",
+    "selFunc": "tournamentSelection",
+    "crosFunc": "twoPointCrossover",
+    "termFunc": "iterationTerminator",
+    "method": "geneticAlgorithm",
+    "input": "./g_input/input-29.json",
+    "output": "./output/gaSolutionLog.json",
+    "id": "393471a5-e014-4f43-a17b-cdc73c4c4710",
+    "batch": "gaManual"
+}
