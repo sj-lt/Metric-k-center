@@ -5,7 +5,7 @@
     "iterations": 1000,
     "n_wh": 10,
     "method": "hillClimb",
-    "input": "./g_input/input-100.json",
+    "input": "./g_input/input-29.json",
     "output": "./output/hillClimbLog.json",
     "batch": "hillManual",
     "id": "3b2bba49-fe44-4bb8-98b6-af30102cfa0a"

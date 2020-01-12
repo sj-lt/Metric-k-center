@@ -76,70 +76,12 @@ void genetic::init()
     calculateFitnesses();
     std::cout << "finish init" << std::endl;
 }
-void genetic::generatePopulation()
-{
-    for (unsigned int i = 0; i < initPopulation_; i++)
-    {
-        population_.push_back(genRandSolution());
-        if (!i)
-        {
-            problem_.warehouses = parseSolutionBool(population_.back());
-            bestSolEver_.second = problem_.score();
-            bestSolEver_.first = problem_.warehouses;
-        }
-    }
-}
-void genetic::calculateFitnesses()
-{
-
-    for (int i = 0; i < population_.size(); i++)
-    {
-        problem_.warehouses = parseSolutionBool(population_[i]);
-        double score = problem_.score();
-        fitnesses_.at(i) = (this->*fitnessFuncPtr_)(score);
-        if (!i)
-        {
-            bestScore_ = score;
-        }
-        else if (fitnesses_.at(i) < bestScore_)
-        {
-            bestScore_ = score;
-        }
-        if (fitnesses_.at(i) < bestSolEver_.second)
-        {
-            bestSolEver_.second = score;
-            bestSolEver_.first = problem_.warehouses;
-        }
-    }
-}
-std::vector<bool> genetic::genRandSolution()
-{
-    // seed the generator
-    std::uniform_int_distribution<> distr(0, problem_.problem->cities.size() - 1); // define the range
-    std::vector<int> sol(problem_.numberOfWarehouses, 0);
-    int drawned = 0;
-    std::vector<int> drawn;
-    bool ifValid;
-    for (int i = 0; i < problem_.numberOfWarehouses; i++)
-    {
-        do
-        {
-            ifValid = true;
-            drawned = distr(eng);
-            for (int number : drawn)
-                if (number == drawned)
-                    ifValid = false;
-        } while (!ifValid);
-        drawn.push_back(drawned);
-        sol.at(i) = drawned;
-    }
-    return parseSolutionInt(sol);
-};
+//-----------------------------------------------FITNESS-----------------------------------------
 double genetic::fitness(double goal)
 {
-    return 10000000.0 / (1.0 + goal);
+    return 100000.0 / (1.0 + goal);
 }
-
+//-----------------------------------------------SELECTION-----------------------------------------
 void genetic::tournamentSelection()
 {
     std::uniform_int_distribution<> distr(0, initPopulation_ - 1);
@@ -151,7 +93,25 @@ void genetic::tournamentSelection()
                                                : parents_.at(i) = population_.at(second);
     }
 };
+void genetic::rouletteSelection()
+{
+    double sumFit = std::accumulate<>(fitnesses_.begin(),fitnesses_.end(),0.0);
+    std::uniform_real_distribution<> distr(0, sumFit);
 
+    for (unsigned int i = 0; i < initPopulation_; i++)
+    {
+        double rand = distr(eng);
+        double sumTemp = 0.0;
+        for(unsigned  int j = 0;j<fitnesses_.size();j++){
+            sumTemp+=fitnesses_.at(j);
+            if(rand<sumTemp){
+                parents_.at(i)=population_.at(j);
+                break;
+            }
+        }
+    }
+};
+//-----------------------------------------------CROSSOVER-----------------------------------------
 void genetic::twoPointCrossover()
 {
     std::uniform_int_distribution<> distrInt(0, problem_.problem->cities.size() - 1);
@@ -166,13 +126,15 @@ void genetic::twoPointCrossover()
             bool isEqual = false;
             while (!isEqual) //check number of warehouses inside need to mach else wrong solution
             {
-                int p1 = distrInt(eng), p2 = distrInt(eng), pc1 = 0, pc2 = 0;
+                p1 = distrInt(eng);
+                p2 = distrInt(eng);
+                int pc1 = 0, pc2 = 0;
 
                 if (p1 > p2)
                 {
                     std::swap(p1, p2);
                 }
-                for (int j = p1; j < p2; j++)
+                for (unsigned int j = p1; j < p2; j++)
                 {
                     if (parents_.at(i).at(j))
                     {
@@ -188,9 +150,9 @@ void genetic::twoPointCrossover()
                     isEqual = true;
                 }
             }
-            solContainer newBorn1(parents_.at(i));
-            solContainer newBorn2(parents_.at(i + 1));
-            for (int j = p1; j < p2; j++)
+            solContainer newBorn1=parents_.at(i);
+            solContainer newBorn2=parents_.at(i + 1);
+            for (unsigned int j = p1; j < p2; j++)
             {
                 newBorn1.at(j) = parents_.at(i + 1).at(j);
                 newBorn2.at(j) = parents_.at(i).at(j);
@@ -219,9 +181,10 @@ void genetic::onePointCrossover()
             bool isEqual = false;
             while (!isEqual) //check number of warehouses inside need to mach else wrong solution
             {
-                int p = distrInt(eng), pc1 = 0, pc2 = 0;
+                p = distrInt(eng);
+                int  pc1 = 0, pc2 = 0;
 
-                for (int j = 0; j < p; j++)
+                for (unsigned int j = 0; j < p; j++)
                 {
                     if (parents_.at(i).at(j))
                     {
@@ -237,9 +200,9 @@ void genetic::onePointCrossover()
                     isEqual = true;
                 }
             }
-            solContainer newBorn1(parents_.at(i));
-            solContainer newBorn2(parents_.at(i + 1));
-            for (int j = 0; j < p; j++)
+            solContainer newBorn1=parents_.at(i);
+            solContainer newBorn2=parents_.at(i + 1);
+            for (unsigned int j = 0; j < p; j++)
             {
                 newBorn1.at(j) = parents_.at(i + 1).at(j);
                 newBorn2.at(j) = parents_.at(i).at(j);
@@ -254,13 +217,15 @@ void genetic::onePointCrossover()
         }
     }
 };
+//-----------------------------------------------MUTATION-----------------------------------------
 //move warehouse to different location(random)
 void genetic::twoPointSwapMutation()
 {
     std::uniform_int_distribution<> distrNew(0, problem_.problem->cities.size() - 1);
     std::uniform_int_distribution<> distrOld(0, problem_.numberOfWarehouses - 1);
+
     std::uniform_real_distribution<> distrReal(0, 1);
-    for (unsigned int i = 0; i < parents_.size(); i++)
+    for (unsigned int i = 0; i < children_.size(); i++)
     {
         double u = distrReal(eng);
         if (mutation_probability_ > u)
@@ -270,20 +235,36 @@ void genetic::twoPointSwapMutation()
             int opc = 0, opi;
             for (unsigned int j = 0; j < problem_.problem->cities.size(); j++)
             {
-                if (parents_.at(i).at(j))
+                if (children_.at(i).at(j))
                 {
                     if (opc == old_point)
                     {
-                        parents_.at(i).at(j) = false;
+                        children_.at(i).at(j) = false;
                         break;
                     }
                     opc++;
                 }
             }
-            parents_.at(i).at(new_point) = true;
+            while(children_.at(i).at(new_point)){
+                new_point=(new_point+1)%(problem_.problem->cities.size() - 1);
+            }
+            children_.at(i).at(new_point) = true;
         }
     }
 };
+void genetic::generateRandomMutation()
+{
+    std::uniform_real_distribution<> distrReal(0, 1);
+    for (unsigned int i = 0; i < children_.size(); i++)
+    {
+        double u = distrReal(eng);
+        if (mutation_probability_ > u)
+        {
+            children_.at(i) = genRandSolution();
+        }
+    }
+};
+//-----------------------------------------------ITERATION-----------------------------------------
 bool genetic::iterationTerminator()
 {
     return iterationsCounter_ < problem_.config_json["iterations"] ? true : false;
@@ -298,7 +279,66 @@ bool genetic::standardDeviationTerminator()
     double sd = std::sqrt(sd / fitnesses_.size());
     return sd > expected ? true : false;
 }
+//-----------------------------------------------HELPERS-----------------------------------------
 
+void genetic::generatePopulation()
+{
+    for (unsigned int i = 0; i < initPopulation_; i++)
+    {
+        population_.push_back(genRandSolution());
+        if (!i)
+        {
+            problem_.warehouses = parseSolutionBool(population_.back());
+            bestSolEver_.second = problem_.score();
+            bestSolEver_.first = problem_.warehouses;
+        }
+    }
+}
+void genetic::calculateFitnesses()
+{
+
+    for (unsigned int i = 0; i < population_.size(); i++)
+    {
+        problem_.warehouses = parseSolutionBool(population_.at(i));
+        double score = problem_.score();
+        fitnesses_.at(i) = (this->*fitnessFuncPtr_)(score);
+        if (!i)
+        {
+            bestScore_ = score;
+        }
+        else if (fitnesses_.at(i) < bestScore_)
+        {
+            bestScore_ = score;
+        }
+        if (fitnesses_.at(i) < bestSolEver_.second)
+        {
+            bestSolEver_.second = score;
+            bestSolEver_.first = problem_.warehouses;
+        }
+    }
+}
+genetic::solContainer genetic::genRandSolution()
+{
+    std::uniform_int_distribution<> distr(0, problem_.problem->cities.size() - 1);
+    std::vector<int> sol(problem_.numberOfWarehouses, 0);
+    int drawned = 0;
+    std::vector<int> drawn; ///maybe problem but doubtfull
+    bool ifValid;
+    for (unsigned int i = 0; i < problem_.numberOfWarehouses; i++)
+    {
+        do
+        {
+            ifValid = true;
+            drawned = distr(eng);
+            for (int number : drawn)
+                if (number == drawned)
+                    ifValid = false;
+        } while (!ifValid);
+        drawn.push_back(drawned);
+        sol.at(i) = drawned;
+    }
+    return parseSolutionInt(sol);
+};
 std::vector<int> genetic::parseSolutionBool(const solContainer &sol)
 {
     int i = 0;

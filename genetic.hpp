@@ -40,10 +40,12 @@ public:
             {"fitness", &genetic::fitness}};
     std::unordered_map<std::string, geneticVoidFunction>
         mutationMap_{
-            {"twoPointSwapMutation", &genetic::twoPointSwapMutation}};
+            {"twoPointSwapMutation", &genetic::twoPointSwapMutation},
+            {"generateRandomMutation", &genetic::generateRandomMutation}};
     std::unordered_map<std::string, geneticVoidFunction>
         selectionMap_{
-            {"tournamentSelection", &genetic::tournamentSelection}};
+            {"tournamentSelection", &genetic::tournamentSelection},
+            {"rouletteSelection", &genetic::rouletteSelection}};
     std::unordered_map<std::string, geneticVoidFunction>
         crossoverMap_{
             {"twoPointCrossover", &genetic::twoPointCrossover},
@@ -59,17 +61,25 @@ public:
 
 private:
     nlohmann::json buildLogMessage();
-    double fitness(double score);
     void generatePopulation();
-    void genetic::printPopulation();
+    void printPopulation();
     void calculateFitnesses();
     solContainer genRandSolution();
+    
     void twoPointSwapMutation();
+    void generateRandomMutation();
+
+    double fitness(double score);
+
     void tournamentSelection();
+    void rouletteSelection();
+
     void twoPointCrossover();
     void onePointCrossover();
+
     bool iterationTerminator();
     bool standardDeviationTerminator();
+
     std::vector<int> parseSolutionBool(const solContainer &sol);
     solContainer parseSolutionInt(std::vector<int> &sol);
 };

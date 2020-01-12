@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 //load solver from configs
 	solver_t *combinations;
 	try{
-		cout<<"Trying to start: "<<config_json["method"]<<endl;
+		cout<<"Starting: "<<config_json["method"]<<endl;
 	combinations = methodMap[config_json["method"]](experiment);	//throwing an instance of 'std::bad_function_call' if wrong params
 	
 	}
