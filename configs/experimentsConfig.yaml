@@ -29,4 +29,32 @@ tabuSearch:
   i: 1
   t: 50
   t_s: 50
+geneticAlgorithm:
+  logIterations: 'false'  #ifset to true can  cause great amout of log data
+  probabilityExperiment: 'false'  #if true check all probability properties from 0-1 0.1 shift
+  probabilityShift: 0.1  #if true check all probability properties from 0-1 0.1 shift
+  i: 1  #every iteraton shifts initPop
+  initPop: 50
+  initPopShift: 50
+  crosProb: 0.9
+  crosProbMin: 0.1
+  crosProbMax: 1.0
+  mutProb: 0.1
+  mutProbMin: 0.0
+  mutProbMax: 0.9
+  #if more than one function every combination of functions will be proceeded
+  fitFunc:  
+    - 'fitness'
+  mutFunc:
+    - 'twoPointSwapMutation'
+#    - 'generateRandomMutation'
+  selFunc:
+    - 'tournamentSelection'
+#    - 'rouletteSelection'
+  crosFunc:
+    - 'twoPointCrossover'
+#    - 'onePointCrossover'
+  termFunc:
+    - 'iterationTerminator'
+#    - 'standardDeviationTerminator'
   

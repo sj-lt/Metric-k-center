@@ -52,7 +52,9 @@ public:
             {"onePointCrossover", &genetic::onePointCrossover}};
     std::unordered_map<std::string, geneticBoolFunction>
         terminationMap_{
-            {"iterationTerminator", &genetic::iterationTerminator}};
+            {"iterationTerminator", &genetic::iterationTerminator},
+            {"standardDeviationTerminator", &genetic::standardDeviationTerminator}
+            };
     geneticDoubleFunction fitnessFuncPtr_;
     geneticVoidFunction mutationFuncPtr_;
     geneticVoidFunction selectionFuncPtr_;
@@ -65,7 +67,7 @@ private:
     void printPopulation();
     void calculateFitnesses();
     solContainer genRandSolution();
-    
+
     void twoPointSwapMutation();
     void generateRandomMutation();
 
