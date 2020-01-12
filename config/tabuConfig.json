@@ -1,1 +1,11 @@
-{"n_wh":3,"iterations":100,"tabuSize":220,"method":"tabuSearch","input":"./g_input/input-29.json","output":"./output/tabuSolutionLog.json","id":"393471a5-e014-4f43-a17b-cdc73c4c4710","batch":"wielblad"}
+{
+    "logIteration": "true",
+    "n_wh": 10,
+    "iterations": 1000,
+    "tabuSize": 220,
+    "method": "tabuSearch",
+    "input": "./g_input/input-100.json",
+    "output": "./output/tabuSolutionLog.json",
+    "id": "393471a5-e014-4f43-a17b-cdc73c4c4710",
+    "batch": "tabuMaual"
+}

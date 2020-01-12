@@ -7,8 +7,16 @@ void genetic::gimmeSolution()
     init();
     while ((this->*terminationFuncPtr_)())
     {
+        if (problem_.config_json["debug"] == "true")
+            printPopulation();
+        if (problem_.config_json["debug"] == "true")
+            std::cout << "starting selection" << std::endl;
         (this->*selectionFuncPtr_)();
+        if (problem_.config_json["debug"] == "true")
+            std::cout << "starting cross" << std::endl;
         (this->*crossoverFuncPtr_)();
+        if (problem_.config_json["debug"] == "true")
+            std::cout << "starting mutation" << std::endl;
         (this->*mutationFuncPtr_)();
         population_ = children_;
         calculateFitnesses();
@@ -22,6 +30,20 @@ void genetic::gimmeSolution()
 
     problem_.warehouses = bestSolEver_.first;
     problem_.bestScore = bestSolEver_.second;
+}
+void genetic::printPopulation()
+{
+    int i = 0;
+    std::cout << iterationsCounter_ << std::endl;
+    for (auto p : population_)
+    {
+        for (auto c : p)
+        {
+            std::cout << c << "|";
+        }
+        std::cout << fitnesses_.at(i) << std::endl;
+        i++;
+    }
 }
 nlohmann::json genetic::buildLogMessage()
 {
@@ -56,7 +78,7 @@ void genetic::init()
 }
 void genetic::generatePopulation()
 {
-    for (unsigned int i = 0; i < problem_.config_json["initPopulation"]; i++)
+    for (unsigned int i = 0; i < initPopulation_; i++)
     {
         population_.push_back(genRandSolution());
         if (!i)
@@ -115,7 +137,7 @@ std::vector<bool> genetic::genRandSolution()
 };
 double genetic::fitness(double goal)
 {
-    return 100000.0 / (1.0 + goal);
+    return 10000000.0 / (1.0 + goal);
 }
 
 void genetic::tournamentSelection()
@@ -138,7 +160,7 @@ void genetic::twoPointCrossover()
     for (unsigned int i = 0; i < parents_.size(); i += 2)
     {
         double u = distrReal(eng);
-        if (problem_.config_json["crossover_probability"] < u)
+        if (crossover_probability_ > u)
         {
             int p1, p2;
             bool isEqual = false;
@@ -183,6 +205,55 @@ void genetic::twoPointCrossover()
         }
     }
 };
+void genetic::onePointCrossover()
+{
+    std::uniform_int_distribution<> distrInt(0, problem_.problem->cities.size() - 1);
+    std::uniform_real_distribution<> distrReal(0, 1);
+
+    for (unsigned int i = 0; i < parents_.size(); i += 2)
+    {
+        double u = distrReal(eng);
+        if (crossover_probability_ > u)
+        {
+            int p;
+            bool isEqual = false;
+            while (!isEqual) //check number of warehouses inside need to mach else wrong solution
+            {
+                int p = distrInt(eng), pc1 = 0, pc2 = 0;
+
+                for (int j = 0; j < p; j++)
+                {
+                    if (parents_.at(i).at(j))
+                    {
+                        pc1++;
+                    }
+                    if (parents_.at(i + 1).at(j))
+                    {
+                        pc2++;
+                    }
+                }
+                if (pc1 == pc2)
+                {
+                    isEqual = true;
+                }
+            }
+            solContainer newBorn1(parents_.at(i));
+            solContainer newBorn2(parents_.at(i + 1));
+            for (int j = 0; j < p; j++)
+            {
+                newBorn1.at(j) = parents_.at(i + 1).at(j);
+                newBorn2.at(j) = parents_.at(i).at(j);
+            }
+            children_.at(i) = newBorn1;
+            children_.at(i + 1) = newBorn2;
+        }
+        else
+        {
+            children_.at(i) = parents_.at(i);
+            children_.at(i + 1) = parents_.at(i + 1);
+        }
+    }
+};
 //move warehouse to different location(random)
 void genetic::twoPointSwapMutation()
 {
@@ -192,7 +263,7 @@ void genetic::twoPointSwapMutation()
     for (unsigned int i = 0; i < parents_.size(); i++)
     {
         double u = distrReal(eng);
-        if (problem_.config_json["mutation_probability"] < u)
+        if (mutation_probability_ > u)
         {
             int new_point = distrNew(eng);
             int old_point = distrOld(eng);

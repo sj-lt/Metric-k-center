@@ -1,12 +1,12 @@
 {
-    "n_wh": 3,
-    "iterations": 50,
+    "logIteration": "true",
+    "annealing": "false",
+    "random": "true",
+    "iterations": 1000,
+    "n_wh": 10,
     "method": "hillClimb",
-    "temperature": 44000,
-    "annealing": "true",
-    "random": "false",
-    "input": "./g_input/input-29.json",
-    "output": "./output/hillSolutionLog.json",
-    "id": "99c4d7db-08d6-4002-80e7-fc0da923ecdf",
-    "batch": "wielblad"
+    "input": "./g_input/input-100.json",
+    "output": "./output/hillClimbLog.json",
+    "batch": "hillManual",
+    "id": "3b2bba49-fe44-4bb8-98b6-af30102cfa0a"
 }

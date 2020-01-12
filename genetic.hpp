@@ -46,7 +46,8 @@ public:
             {"tournamentSelection", &genetic::tournamentSelection}};
     std::unordered_map<std::string, geneticVoidFunction>
         crossoverMap_{
-            {"twoPointCrossover", &genetic::twoPointCrossover}};
+            {"twoPointCrossover", &genetic::twoPointCrossover},
+            {"onePointCrossover", &genetic::onePointCrossover}};
     std::unordered_map<std::string, geneticBoolFunction>
         terminationMap_{
             {"iterationTerminator", &genetic::iterationTerminator}};
@@ -60,11 +61,13 @@ private:
     nlohmann::json buildLogMessage();
     double fitness(double score);
     void generatePopulation();
+    void genetic::printPopulation();
     void calculateFitnesses();
     solContainer genRandSolution();
     void twoPointSwapMutation();
     void tournamentSelection();
     void twoPointCrossover();
+    void onePointCrossover();
     bool iterationTerminator();
     bool standardDeviationTerminator();
     std::vector<int> parseSolutionBool(const solContainer &sol);
