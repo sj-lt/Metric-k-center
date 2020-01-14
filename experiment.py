@@ -13,7 +13,7 @@ with open(configPath,'r') as f:
 #----------------PREPARE INPUTS
 inputs = eU.prepareInputs(GlobalConfig)
 iterations = GlobalConfig['iterations']
-
+print('Starting')
 for input in inputs:
     #bruteforce as separate proceses
     p = mp.Process(target = eU.bruteForce,args=(GlobalConfig,input))
@@ -24,8 +24,13 @@ for input in inputs:
         # p.start()
         # p = mp.Process(target = eU.tabuSearch,args=(GlobalConfig,input))
         # p.start()
-         eU.hillClimb(GlobalConfig,input)
-         eU.tabuSearch(GlobalConfig,input)
+        eU.hillClimb(GlobalConfig,input)
+        eU.tabuSearch(GlobalConfig,input)
+        eU.geneticAlgorithm(GlobalConfig,input)
+        print('.',end='')
     
 print("finito")
 
+#try to switch input with i and try
+# p = mp.Pool(1)
+# result=p.map()

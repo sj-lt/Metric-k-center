@@ -43,9 +43,10 @@ def createConfig(GlobalConfig, input, method, config):
     config['n_wh'] = GlobalConfig['n_wh']
     config['method'] = method
     config['input'] = input
-    config['output'] = './output/'+method + GlobalConfig['output'] + '.json'
+    config['output'] = './g_output/'+method + GlobalConfig['output'] + '.json'
     config['batch'] = GlobalConfig['batch']
     config['id'] = str(uuid.uuid4())
+    config['visualization'] = GlobalConfig['visualization']
     return config
 
 
@@ -124,8 +125,8 @@ def tabuSearch(GlobalConfig, input):
 
 def geneticAlgorithm(GlobalConfig, input):
     configGlobal = {}
-    configGlobal['logIteration'] = str(
-        GlobalConfig['geneticAlgorithm']['logIterations'])
+    configGlobal['logIteration'] = str(GlobalConfig['geneticAlgorithm']['logIterations'])
+    configGlobal['debug'] = 'false'
     for fitFunc in GlobalConfig['geneticAlgorithm']['fitFunc']:
         for mutFunc in GlobalConfig['geneticAlgorithm']['mutFunc']:
             for selFunc in GlobalConfig['geneticAlgorithm']['selFunc']:

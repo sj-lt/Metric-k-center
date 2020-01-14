@@ -1,15 +1,16 @@
 #GENERAL
-n_wh: 3 
-iterations: 1
+n_wh: 5
+iterations: 10
 i: 100 #iterations in method
-batch: 'parameters3'
+batch: 'experimentTest'
 output: 'Log' #ending of output file structure : {method}{ending}.json
 pPath: './build/kCenterProblem ' 
+visualization: 'false'  #generate log for kibana maps
 #INPUT
 input:
   start: 60
-  end: 61
-  shift: 1
+  end: 71
+  shift: 10
   baseFile: './input/citiesTest6Csv.json'
 #METHODS
 bruteForce: false
@@ -26,14 +27,14 @@ hillClimb:
     t_s: 4000
 tabuSearch:
   logIterations: 'false'
-  i: 1
+  i: 2
   t: 50
   t_s: 50
 geneticAlgorithm:
   logIterations: 'false'  #ifset to true can  cause great amout of log data
   probabilityExperiment: 'false'  #if true check all probability properties from 0-1 0.1 shift
   probabilityShift: 0.1  #if true check all probability properties from 0-1 0.1 shift
-  i: 1  #every iteraton shifts initPop
+  i: 2  #every iteraton shifts initPop
   initPop: 50
   initPopShift: 50
   crosProb: 0.9
