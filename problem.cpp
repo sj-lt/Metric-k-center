@@ -70,6 +70,50 @@ double solution_t::score()
 	}
 	return dist;
 }
+
+double solution_t::scoreParallel(std::vector<int> warehouses)
+
+{ 
+
+	//std::cout<<"start score--------:"<<std::endl;
+	double dist ;
+	double tempDist;
+
+	int n = 0, n1 = 0;
+	//for (city_t city : problem->cities)
+	for(int h=0 ;h<problem->cities.size();h++)
+	{
+		bool ifWarehouse = false;
+		for (auto w : warehouses)
+		{
+			if (n == w)
+				ifWarehouse = true;
+		}
+		if (ifWarehouse)
+		{
+			n++;	continue;
+		}
+		else
+		{
+			for (int i = 1; i < warehouses.size(); i++)
+			{
+                                                                         //get the nearest warehouse
+				if (i == 1)
+					tempDist = std::min(problem->cities.at(h).distance(problem->cities.at(warehouses.at(0))),problem->cities.at(h).distance(problem->cities.at(warehouses.at(1)))	);
+				else
+					tempDist = std::min(tempDist, problem->cities.at(h).distance(problem->cities.at(warehouses.at(i))));
+			}
+         												//get farthest city from the nearest warehouse
+			if (n1 == 0)
+			{
+				dist = tempDist;	n1++;
+			}
+			dist = std::max(dist, tempDist);	n++;
+		}
+	}
+	return dist;
+}
+
 /*
 *@returns score in km
 **/

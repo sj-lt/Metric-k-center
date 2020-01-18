@@ -26,10 +26,12 @@ void genetic::gimmeSolution()
             logger(buildLogMessage());
         }
         iterationsCounter_++;
+	//std::cout<<fitnesses_.at(std::distance(fitnesses_.begin(),std::max_element(fitnesses_.begin(), fitnesses_.end())))<<std::endl;
     }
-
-    problem_.warehouses = bestSolEver_.first;
-    problem_.bestScore = bestSolEver_.second;
+    problem_.warehouses = parseSolutionBool(population_.at(std::distance(fitnesses_.begin(), std::max_element(fitnesses_.begin(), fitnesses_.end()))));
+    problem_.bestScore = problem_.score();
+    //problem_.warehouses = bestSolEver_.first;
+    //problem_.bestScore = bestSolEver_.second;
 }
 void genetic::printPopulation()
 {
@@ -300,22 +302,8 @@ void genetic::calculateFitnesses()
     #pragma omp parallel for
     for (unsigned int i = 0; i < population_.size(); i++)
     {
-        problem_.warehouses = parseSolutionBool(population_.at(i));
-        double score = problem_.score();
+        double score = problem_.scoreParallel(parseSolutionBool(population_.at(i)));
         fitnesses_.at(i) = (this->*fitnessFuncPtr_)(score);
-        if (!i)
-        {
-            bestScore_ = score;
-        }
-        else if (fitnesses_.at(i) < bestScore_)
-        {
-            bestScore_ = score;
-        }
-        if (fitnesses_.at(i) < bestSolEver_.second)
-        {
-            bestSolEver_.second = score;
-            bestSolEver_.first = problem_.warehouses;
-        }
     }
 
 }

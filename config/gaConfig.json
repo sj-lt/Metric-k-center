@@ -1,5 +1,5 @@
 {
-    "logIteration": "true",
+    "logIteration": "false",
     "debug": "false",
     "n_wh": 10,
     "iterations": 1000,

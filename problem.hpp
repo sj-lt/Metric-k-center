@@ -39,6 +39,7 @@ public:
   double bestScore;
   double getBestScoreKm();
   double score();
+  double scoreParallel(std::vector<int> warehouses);
   std::vector<city_t> getCitySolution();
 
   solution_t(std::shared_ptr<problem_t> problem_, nlohmann::json config_json);
