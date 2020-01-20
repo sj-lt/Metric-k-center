@@ -1,0 +1,23 @@
+{
+    "logIteration": "false",
+    "debug": "false",
+    "n_wh": 10,
+    "exchangePeriod": 100,
+    "numberOfPeriods":10,
+    "numberOfIslands": 10,
+    "numberOfEmigrants": 1,
+    "iterations": 100,
+    "initPopulation": 100,
+    "crossoverProbability": 0.9,
+    "mutationProbability": 0.1,
+    "fitFunc": "fitness",
+    "mutFunc": "twoPointSwapMutation",
+    "selFunc": "tournamentSelection",
+    "crosFunc": "twoPointCrossover",
+    "termFunc": "iterationTerminator",
+    "method": "geneticAlgorithmIslands",
+    "input": "./g_input/input-60.json",
+    "output": "./output/gaSolutionLog.json",
+    "id": "393471a5-e014-4f43-a17b-cdc73c4c4710",
+    "batch": "gaManual"
+}

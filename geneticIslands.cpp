@@ -5,20 +5,26 @@ void geneticWorld::gimmeSolution()
     init();
     while (iterationTerminator())
     {
+
         for (unsigned int i = 0; i < exchangePeriod_; i++)
         {
-            world_.at(i).gimmeSolution();
+            #pragma omp parallel for
+            for (unsigned int j = 0; j < numberOfIslands_; j++)
+                world_.at(j).gimmeSolution();
         }
+        std::cout << "asd" << std::endl;
         //sortPopulation();
         sendShips();
         iterationsCounter_++;
         //std::cout<<fitnesses_.at(std::distance(fitnesses_.begin(),std::max_element(fitnesses_.begin(), fitnesses_.end())))<<std::endl;
     }
-    std::vector<std::vector<int>> bestSolutions(numberOfIslands_);
-    for (unsigned int i = 0; i < numberOfIslands_; i++)
-    {
-        bestSolutions.at(i) = world_.at(i).getBest();
-    }
+    //----------------------TODO GET BEST OD ISLANDS
+    // std::vector<std::vector<int>> bestSolutions(numberOfIslands_);
+    // for (unsigned int i = 0; i < numberOfIslands_; i++)
+    // {
+    //     bestSolutions.at(i) = world_.at(i).getBest();
+    // }
+
     //problem_.warehouses = parseSolutionBool(population_.at(std::distance(fitnesses_.begin(), std::max_element(fitnesses_.begin(), fitnesses_.end()))));
     //problem_.bestScore = problem_.score();
     //problem_.warehouses = bestSolEver_.first;
@@ -30,7 +36,8 @@ void geneticWorld::init()
 {
     std::cout << "start world init" << std::endl;
     iterationsCounter_ = 0;
-    exchangePeriod_ = problem_.config_json["exchangeTime"];
+    numberOfPeriods_ = problem_.config_json["numberOfPeriods"];
+    exchangePeriod_ = problem_.config_json["exchangePeriod"];
     numberOfIslands_ = problem_.config_json["numberOfIslands"];
     numberOfEmigrants_ = problem_.config_json["numberOfEmigrants"];
     randomEmigrant_ = problem_.config_json["randomEmigrant"] == "false" ? false : true;
@@ -46,7 +53,7 @@ void geneticWorld::init()
 
 void geneticWorld::sendShips()
 {
-    populationContainer ships(numberOfIslands_, solGroupContainer(numberOfIslands_ - 1));
+    populationContainer ships(numberOfIslands_, solGroupContainer(numberOfIslands_));
     for (unsigned int i = 0; i < numberOfIslands_; i++)
     {
         if (randomEmigrant_)
@@ -62,14 +69,14 @@ void geneticWorld::sendShips()
     {
         if (randomReplace_)
         {
-            for (unsigned int j = 0; j < (numberOfIslands_ - 1); j++)
+            for (unsigned int j = 0; j < (numberOfIslands_); j++)
             {
-                world_.at(i).population_.at(j) = ships.at(i).at(j);
+                if (i != j)
+                    world_.at(i).population_.at(j) = ships.at(i).at(j);
             }
         }
     }
 }
-
 
 void geneticWorld::sortPopulation()
 {
@@ -81,13 +88,12 @@ void geneticWorld::sortPopulation()
 
 bool geneticWorld::iterationTerminator()
 {
-    return iterationsCounter_ < problem_.config_json["numberOfPeriods"] ? true : false;
+    return iterationsCounter_ < numberOfPeriods_ ? true : false;
 };
 geneticWorld::geneticWorld(solution_t problem)
 {
     problem_ = problem;
 }
-
 
 //-----------------------------------------------GENETIC ISLAND-----------------------------------------
 void geneticIsland::gimmeSolution()
@@ -101,7 +107,6 @@ void geneticIsland::gimmeSolution()
 void geneticIsland::init()
 {
     std::cout << "start island init" << std::endl;
-    iterationsCounter_ = 0;
     initPopulation_ = problem_.config_json["initPopulation"];
     crossover_probability_ = problem_.config_json["crossoverProbability"];
     mutation_probability_ = problem_.config_json["mutationProbability"];
@@ -119,11 +124,7 @@ void geneticIsland::init()
 }
 std::vector<int> geneticIsland::getBest()
 {
-    (this->*selectionFuncPtr_)();
-    (this->*crossoverFuncPtr_)();
-    (this->*mutationFuncPtr_)();
-    population_ = children_;
-    calculateFitnesses();
+    return std::vector<int>(1, 0);
 }
 geneticIsland::geneticIsland(solution_t problem)
 {

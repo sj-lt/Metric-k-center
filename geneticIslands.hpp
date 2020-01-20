@@ -31,6 +31,7 @@ public:
     int iterationsCounter_ = 0;
 
     int numberOfIslands_;
+    int numberOfPeriods_;
     int numberOfEmigrants_;
     int exchangePeriod_;
     bool randomEmigrant_;

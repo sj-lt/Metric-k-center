@@ -3,6 +3,7 @@
 /*
 	build --->  
 				mkdir build | mkdir g_input | mkdir g_output | mkdir g_config | mkdir output | g++ main.cpp -std=c++17 -o ./build/kCenterProblem	
+				mkdir build | mkdir g_input | mkdir g_output | mkdir g_config | mkdir output | g++ main.cpp -std=c++17 -o ./build/kCenterProblem -fopenmp	
 	run brute --> 
 				./build/kCenterProblem ./config/bruteConfig.json 
 	run hill  --> 
