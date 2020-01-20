@@ -4,6 +4,7 @@
 #include "hillClimber.cpp"
 #include "tabuSearcher.cpp"
 #include "genetic.cpp"
+#include "geneticIslands.cpp"
 #include "skel.cpp"
 /*
 *@returns distance beetwen cities

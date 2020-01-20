@@ -297,8 +297,7 @@ void genetic::generatePopulation()
     }
 }
 void genetic::calculateFitnesses()
-{
-    //If want to make parallel need to modify score function fo passing warehouses & keeping best also problematic
+{ 
     #pragma omp parallel for
     for (unsigned int i = 0; i < population_.size(); i++)
     {

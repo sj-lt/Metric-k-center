@@ -86,6 +86,9 @@ std::map<std::string, std::function<solver_t *(solution_t)>> generate_methods_ma
 	methodMap["geneticAlgorithm"] = [](auto experiment) {
 		return new genetic(experiment);
 	};
+	methodMap["geneticAlgorithmIslands"] = [](auto experiment) {
+		return new geneticWorld(experiment);
+	};
 	return methodMap;
 }
 void saveOrPrint(solver_t *combinations)

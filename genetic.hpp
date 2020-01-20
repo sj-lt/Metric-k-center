@@ -28,7 +28,7 @@ public:
     std::pair<std::vector<int>, double> bestSolEver_;
     double bestScore_;
     genetic(solution_t problem);
-    genetic();
+    genetic(){};
     void init();
     void gimmeSolution();
     typedef void (genetic::*geneticVoidFunction)();
@@ -61,7 +61,7 @@ public:
     geneticVoidFunction crossoverFuncPtr_;
     geneticBoolFunction terminationFuncPtr_;
 
-private:
+protected:
     nlohmann::json buildLogMessage();
     void generatePopulation();
     void printPopulation();
