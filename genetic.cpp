@@ -28,7 +28,7 @@ void genetic::gimmeSolution()
         iterationsCounter_++;
 	//std::cout<<fitnesses_.at(std::distance(fitnesses_.begin(),std::max_element(fitnesses_.begin(), fitnesses_.end())))<<std::endl;
     }
-    problem_.warehouses = parseSolutionBool(population_.at(std::distance(fitnesses_.begin(), std::max_element(fitnesses_.begin(), fitnesses_.end()))));
+    problem_.warehouses = getBest();
     problem_.bestScore = problem_.score();
     //problem_.warehouses = bestSolEver_.first;
     //problem_.bestScore = bestSolEver_.second;
@@ -72,7 +72,7 @@ void genetic::init()
     crossoverFuncPtr_ = crossoverMap_[problem_.config_json["crosFunc"]];
     terminationFuncPtr_ = terminationMap_[problem_.config_json["termFunc"]];
     fitnesses_ = genetic::fitContainer(initPopulation_, 0.0);
-    children_ = genetic::solGroupContainer(initPopulation_, genetic::solContainer(false));
+    children_ = genetic::altSolGroupContainer(initPopulation_, genetic::altSolContainer(false));
     parents_ = children_;
     generatePopulation();
     calculateFitnesses();
@@ -152,8 +152,8 @@ void genetic::twoPointCrossover()
                     isEqual = true;
                 }
             }
-            solContainer newBorn1=parents_.at(i);
-            solContainer newBorn2=parents_.at(i + 1);
+            altSolContainer newBorn1=parents_.at(i);
+            altSolContainer newBorn2=parents_.at(i + 1);
             for (unsigned int j = p1; j < p2; j++)
             {
                 newBorn1.at(j) = parents_.at(i + 1).at(j);
@@ -202,8 +202,8 @@ void genetic::onePointCrossover()
                     isEqual = true;
                 }
             }
-            solContainer newBorn1=parents_.at(i);
-            solContainer newBorn2=parents_.at(i + 1);
+            altSolContainer newBorn1 = parents_.at(i);
+            altSolContainer newBorn2 = parents_.at(i + 1);
             for (unsigned int j = 0; j < p; j++)
             {
                 newBorn1.at(j) = parents_.at(i + 1).at(j);
@@ -282,7 +282,10 @@ bool genetic::standardDeviationTerminator()
     return sd > expected ? true : false;
 }
 //-----------------------------------------------HELPERS-----------------------------------------
-
+genetic::solContainer genetic::getBest()
+{
+    return parseSolutionBool(population_.at(std::distance(fitnesses_.begin(), std::max_element(fitnesses_.begin(), fitnesses_.end()))));
+}
 void genetic::generatePopulation()
 {
     for (unsigned int i = 0; i < initPopulation_; i++)
@@ -306,12 +309,12 @@ void genetic::calculateFitnesses()
     }
 
 }
-genetic::solContainer genetic::genRandSolution()
+genetic::altSolContainer genetic::genRandSolution()
 {
     std::uniform_int_distribution<> distr(0, problem_.problem->cities.size() - 1);
-    std::vector<int> sol(problem_.numberOfWarehouses, 0);
+    solContainer sol(problem_.numberOfWarehouses, 0);
     int drawned = 0;
-    std::vector<int> drawn; ///maybe problem but doubtfull
+    solContainer drawn; 
     bool ifValid;
     for (unsigned int i = 0; i < problem_.numberOfWarehouses; i++)
     {
@@ -328,10 +331,10 @@ genetic::solContainer genetic::genRandSolution()
     }
     return parseSolutionInt(sol);
 };
-std::vector<int> genetic::parseSolutionBool(const solContainer &sol)
+genetic::solContainer genetic::parseSolutionBool(const altSolContainer &sol)
 {
     int i = 0;
-    std::vector<int> new_sol;
+    solContainer new_sol;
     for (bool s : sol)
     {
         if (s)
@@ -340,9 +343,9 @@ std::vector<int> genetic::parseSolutionBool(const solContainer &sol)
     }
     return new_sol;
 }
-genetic::solContainer genetic::parseSolutionInt(std::vector<int> &sol)
+genetic::altSolContainer genetic::parseSolutionInt(solContainer &sol)
 {
-    solContainer new_sol(problem_.problem->cities.size(), false);
+    altSolContainer new_sol(problem_.problem->cities.size(), false);
     for (int s : sol)
     {
         new_sol.at(s) = true;

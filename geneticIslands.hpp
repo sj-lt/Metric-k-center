@@ -16,7 +16,6 @@ class geneticIsland  : public genetic
 public:
     void init();
     void gimmeSolution();
-    std::vector<int> getBest();
     geneticIsland(solution_t problem);
     geneticIsland(){};
 };
@@ -24,8 +23,8 @@ class geneticWorld : public solver_t
 {
 public:
     typedef std::vector<geneticIsland> islandContainer;
-    typedef std::vector<std::vector<bool>> solGroupContainer;
-    typedef std::vector<solGroupContainer> populationContainer;
+    typedef std::vector<std::vector<bool>> altSolGroupContainer;
+    typedef std::vector<altSolGroupContainer> populationContainer;
 
     islandContainer world_;
     int iterationsCounter_ = 0;
@@ -36,7 +35,7 @@ public:
     int exchangePeriod_;
     bool randomEmigrant_;
     bool randomReplace_;
-    std::pair<std::vector<int>, double> bestSolEver_;
+    std::pair<solContainer, double> bestSolEver_;
     double bestScore_;
     geneticWorld(solution_t problem);
     geneticWorld();
@@ -48,7 +47,6 @@ private:
     nlohmann::json buildLogMessage();
     void sendShips();
     void sortPopulation();
-
     bool iterationTerminator();
 
 };

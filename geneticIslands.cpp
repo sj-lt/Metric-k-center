@@ -12,23 +12,21 @@ void geneticWorld::gimmeSolution()
             for (unsigned int j = 0; j < numberOfIslands_; j++)
                 world_.at(j).gimmeSolution();
         }
-        std::cout << "asd" << std::endl;
-        //sortPopulation();
         sendShips();
         iterationsCounter_++;
-        //std::cout<<fitnesses_.at(std::distance(fitnesses_.begin(),std::max_element(fitnesses_.begin(), fitnesses_.end())))<<std::endl;
     }
-    //----------------------TODO GET BEST OD ISLANDS
-    // std::vector<std::vector<int>> bestSolutions(numberOfIslands_);
-    // for (unsigned int i = 0; i < numberOfIslands_; i++)
-    // {
-    //     bestSolutions.at(i) = world_.at(i).getBest();
-    // }
 
-    //problem_.warehouses = parseSolutionBool(population_.at(std::distance(fitnesses_.begin(), std::max_element(fitnesses_.begin(), fitnesses_.end()))));
-    //problem_.bestScore = problem_.score();
-    //problem_.warehouses = bestSolEver_.first;
-    //problem_.bestScore = bestSolEver_.second;
+    std::vector<solContainer> bestSolutions(numberOfIslands_);
+    std::vector<double> bestScore(numberOfIslands_);
+    #pragma omp parallel for
+    for (unsigned int i = 0; i < numberOfIslands_; i++)
+    {
+        bestSolutions.at(i) = world_.at(i).getBest();
+        bestScore.at(i) = problem_.scoreParallel(bestSolutions.at(i));
+    }
+    int i = std::distance(bestScore.begin(), std::max_element(bestScore.begin(), bestScore.end()));
+    problem_.warehouses = bestSolutions.at(i);
+    problem_.bestScore = bestScore.at(i);
 }
 //-----------------------------------------------GENETIC WORLD-----------------------------------------
 
@@ -53,7 +51,7 @@ void geneticWorld::init()
 
 void geneticWorld::sendShips()
 {
-    populationContainer ships(numberOfIslands_, solGroupContainer(numberOfIslands_));
+    populationContainer ships(numberOfIslands_, altSolGroupContainer(numberOfIslands_));
     for (unsigned int i = 0; i < numberOfIslands_; i++)
     {
         if (randomEmigrant_)
@@ -106,7 +104,7 @@ void geneticIsland::gimmeSolution()
 }
 void geneticIsland::init()
 {
-    std::cout << "start island init" << std::endl;
+    //std::cout << "start island init" << std::endl;
     initPopulation_ = problem_.config_json["initPopulation"];
     crossover_probability_ = problem_.config_json["crossoverProbability"];
     mutation_probability_ = problem_.config_json["mutationProbability"];
@@ -116,16 +114,13 @@ void geneticIsland::init()
     crossoverFuncPtr_ = crossoverMap_[problem_.config_json["crosFunc"]];
     terminationFuncPtr_ = terminationMap_[problem_.config_json["termFunc"]];
     fitnesses_ = genetic::fitContainer(initPopulation_, 0.0);
-    children_ = genetic::solGroupContainer(initPopulation_, genetic::solContainer(false));
+    children_ = genetic::altSolGroupContainer(initPopulation_, genetic::altSolContainer(false));
     parents_ = children_;
     generatePopulation();
     calculateFitnesses();
-    std::cout << "finish island init" << std::endl;
+    //std::cout << "finish island init" << std::endl;
 }
-std::vector<int> geneticIsland::getBest()
-{
-    return std::vector<int>(1, 0);
-}
+
 geneticIsland::geneticIsland(solution_t problem)
 {
     problem_ = problem;

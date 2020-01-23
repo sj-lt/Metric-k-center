@@ -1,7 +1,7 @@
 {
     "logIteration": "false",
     "debug": "false",
-    "n_wh": 10,
+    "n_wh": 2,
     "iterations": 1000,
     "initPopulation": 100,
     "crossoverProbability": 0.9,
@@ -12,7 +12,7 @@
     "crosFunc": "twoPointCrossover",
     "termFunc": "iterationTerminator",
     "method": "geneticAlgorithm",
-    "input": "./g_input/input-60.json",
+    "input": "./csv/citiesCsv.json",
     "output": "./output/gaSolutionLog.json",
     "id": "393471a5-e014-4f43-a17b-cdc73c4c4710",
     "batch": "gaManual"

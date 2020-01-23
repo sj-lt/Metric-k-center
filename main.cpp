@@ -12,6 +12,8 @@
 				./build/kCenterProblem ./config/tabuConfig.json 
 	run ga  --> 
 				./build/kCenterProblem ./config/gaConfig.json 
+	run gaIslands  --> 
+				./build/kCenterProblem ./config/gaIslandsConfig.json 
 */
 std::map<std::string, std::function<solver_t *(solution_t)>> generate_methods_map();
 void saveOrPrint(solver_t *combinations);

@@ -1,15 +1,15 @@
 #GENERAL
 n_wh: 5
-iterations: 0
-i: 100 #iterations in method
-batch: 'experimentTest'
-output: 'Log' #ending of output file structure : {method}{ending}.json
+iterations: 10
+i: 1000 #iterations in method
+batch: 'probTestGa'
+output: 'TESTLog' #ending of output file structure : {method}{ending}.json
 pPath: './build/kCenterProblem ' 
 visualization: 'false'  #generate log for kibana maps
 #INPUT
 input:
-  start: 60
-  end: 101
+  start: 200
+  end: 201
   shift: 10
   baseFile: './input/citiesTest6Csv.json'
 #METHODS
@@ -32,10 +32,10 @@ tabuSearch:
   t_s: 50
 geneticAlgorithm:
   logIterations: 'false'  #ifset to true can  cause great amout of log data
-  probabilityExperiment: 'false'  #if true check all probability properties from 0-1 0.1 shift
-  probabilityShift: 0.1  #if true check all probability properties from 0-1 0.1 shift
-  i: 0  #every iteraton shifts initPop
-  initPop: 50
+  probabilityExperiment: 'true'  #if true check all probability properties from 0-1 0.1 shift
+  probabilityShift: 0.05  #if true check all probability properties from 0-1 0.1 shift
+  i: 1  #every iteraton shifts initPop
+  initPop: 100
   initPopShift: 50
   crosProb: 0.9
   crosProbMin: 0.1
@@ -48,14 +48,14 @@ geneticAlgorithm:
     - 'fitness'
   mutFunc:
     - 'twoPointSwapMutation'
-#    - 'generateRandomMutation'
+    - 'generateRandomMutation'
   selFunc:
     - 'tournamentSelection'
-#    - 'rouletteSelection'
+    - 'rouletteSelection'
   crosFunc:
     - 'twoPointCrossover'
-#    - 'onePointCrossover'
+    - 'onePointCrossover'
   termFunc:
     - 'iterationTerminator'
-#    - 'standardDeviationTerminator'
+    - 'standardDeviationTerminator'
   

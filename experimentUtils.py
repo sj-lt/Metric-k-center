@@ -133,6 +133,7 @@ def geneticAlgorithm(GlobalConfig, input):
                 for crosFunc in GlobalConfig['geneticAlgorithm']['crosFunc']:
                     for termFunc in GlobalConfig['geneticAlgorithm']['termFunc']:
                         for i in range(GlobalConfig['geneticAlgorithm']['i']):
+                            print('g.',end='',flush=True)
                             configPath = './g_config/gaConfig.json'
                             config = configGlobal
                             config['fitFunc']=fitFunc
@@ -150,9 +151,10 @@ def geneticAlgorithm(GlobalConfig, input):
                                 crosProbMax=GlobalConfig['geneticAlgorithm']['crosProbMax']
                                 mutProb=GlobalConfig['geneticAlgorithm']['mutProbMin']
                                 mutProbMax=GlobalConfig['geneticAlgorithm']['mutProbMax']
-                                config['crosProb']=crosProb
-                                config['mutProb']=mutProb
+                                # config['crosProb']=crosProb
+                                # config['mutProb']=mutProb
                                 while(mutProb<mutProbMax):
+                                    crosProb=GlobalConfig['geneticAlgorithm']['crosProbMin']
                                     while(crosProb<crosProbMax):
                                         config['crossoverProbability']=crosProb      
                                         config['mutationProbability']=mutProb

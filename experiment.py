@@ -27,7 +27,7 @@ for input in inputs:
         eU.hillClimb(GlobalConfig,input)
         eU.tabuSearch(GlobalConfig,input)
         eU.geneticAlgorithm(GlobalConfig,input)
-        print('.',end='')
+        print('.',end='',flush=True)
     
 print("finito")
 

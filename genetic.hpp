@@ -13,19 +13,19 @@
 class genetic : public solver_t
 {
 public:
-    typedef std::vector<bool> solContainer;
-    typedef std::vector<std::vector<bool>> solGroupContainer;
+    typedef std::vector<bool> altSolContainer;
+    typedef std::vector<altSolContainer> altSolGroupContainer;
     typedef std::vector<double> fitContainer;
 
     fitContainer fitnesses_;
-    solGroupContainer population_;
-    solGroupContainer parents_;
-    solGroupContainer children_;
+    altSolGroupContainer population_;
+    altSolGroupContainer parents_;
+    altSolGroupContainer children_;
     int iterationsCounter_ = 0;
     int initPopulation_;
     double crossover_probability_;
     double mutation_probability_;
-    std::pair<std::vector<int>, double> bestSolEver_;
+    std::pair<solContainer, double> bestSolEver_;
     double bestScore_;
     genetic(solution_t problem);
     genetic(){};
@@ -60,13 +60,14 @@ public:
     geneticVoidFunction selectionFuncPtr_;
     geneticVoidFunction crossoverFuncPtr_;
     geneticBoolFunction terminationFuncPtr_;
+    solContainer getBest();
 
 protected:
     nlohmann::json buildLogMessage();
     void generatePopulation();
     void printPopulation();
     void calculateFitnesses();
-    solContainer genRandSolution();
+    altSolContainer genRandSolution();
 
     void twoPointSwapMutation();
     void generateRandomMutation();
@@ -82,6 +83,6 @@ protected:
     bool iterationTerminator();
     bool standardDeviationTerminator();
 
-    std::vector<int> parseSolutionBool(const solContainer &sol);
-    solContainer parseSolutionInt(std::vector<int> &sol);
+    solContainer parseSolutionBool(const altSolContainer &sol);
+    altSolContainer parseSolutionInt(solContainer &sol);
 };

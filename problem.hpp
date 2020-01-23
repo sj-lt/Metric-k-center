@@ -51,6 +51,7 @@ public:
 class solver_t
 {
 public:
+  typedef std::vector<int> solContainer;
   solution_t problem_;
   std::string logIteration_;
   void virtual gimmeSolution() = 0;
